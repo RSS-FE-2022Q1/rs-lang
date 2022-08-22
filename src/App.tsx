@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 import { Routes, Route, Navigate } from 'react-router-dom';
 
@@ -51,4 +50,3 @@ const App = (): JSX.Element => {
   );
 };
 export default App;
-
