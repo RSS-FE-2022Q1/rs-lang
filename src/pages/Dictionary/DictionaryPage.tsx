@@ -15,9 +15,6 @@ const DictionaryPage = (): JSX.Element => (
         <li>
           <Link to="progress">Progress</Link>
         </li>
-        <li>
-          <Link to="statistics">Statistics</Link>
-        </li>
       </ul>
     </nav>
     <Outlet />

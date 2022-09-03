@@ -17,8 +17,7 @@ import GameAudio from './pages/Games/GameAudio';
 import GameSprint from './pages/Games/GameSprint';
 import GamesPage from './pages/Games/GamesPage';
 import { MainPage } from './pages/MainPage/MainPage';
-import ProfilePage from './pages/ProfilePage';
-import Statistics from './pages/Statistics/Statistics';
+import ProfilePage from './pages/Profile/ProfilePage';
 import { TeamPage } from './pages/TeamPage/TeamPage';
 import TextbookMainPage from './pages/TextbookMainPage/TextbookMainPage';
 import { fetchUserWords } from './store/userWordSlice';
@@ -62,7 +61,6 @@ const App = ():JSX.Element => {
         { path: 'difficult', element: <DifficultWords /> },
         { path: 'learned', element: <LearnedWords /> },
         { path: 'progress', element: <Progress /> },
-        { path: 'statistics', element: <Statistics /> },
       ],
     },
     {

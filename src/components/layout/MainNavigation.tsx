@@ -9,7 +9,7 @@ import { authActions } from '@/store/authSlice';
 import { RootState } from '@/store/store';
 
 const MainNavigation = ({ children }:React.PropsWithChildren): JSX.Element => {
-  console.log('MainNavigation');
+  // console.log('MainNavigation');
   const authState = useSelector((state: RootState) => state.authentication);
   const { isLoggedIn } = authState;
   const dispatch = useDispatch();
@@ -35,43 +35,38 @@ const MainNavigation = ({ children }:React.PropsWithChildren): JSX.Element => {
         <nav>
           <ul>
             <li>
-              <Link to="/" getActiveProps={getActiveProps}>
-              Home
-              </Link>
-            </li>
-            <li>
               <Link to="/team" getActiveProps={getActiveProps}>
-              Team{' '}
+                Команда
               </Link>
             </li>
             <li>
               <Link to="/textbook" getActiveProps={getActiveProps}>
-              Textbook
+                Учебник
               </Link>
             </li>
             {isLoggedIn && (
               <li>
                 <Link to="/dictionary" getActiveProps={getActiveProps}>
-                Dictionary
+                Мои слова
                 </Link>
               </li>
             )}
             <li>
               <Link to="/games" getActiveProps={getActiveProps}>
-              Games
+              Игры
               </Link>
             </li>
             {!isLoggedIn && (
               <li>
                 <Link to="/auth" getActiveProps={getActiveProps}>
-                Login|SignUp
+                Войти
                 </Link>
               </li>
             )}
             {isLoggedIn && (
               <li>
                 <Link to="/profile" getActiveProps={getActiveProps}>
-                Profile {authState.user.name}
+                Профиль {authState.user.name}
                 </Link>
               </li>
             )}
@@ -85,7 +80,7 @@ const MainNavigation = ({ children }:React.PropsWithChildren): JSX.Element => {
             {isLoggedIn && (
               <li>
                 <button type="button" onClick={logoutHandler}>
-                Logout
+                Выйти
                 </button>
               </li>
             )}
