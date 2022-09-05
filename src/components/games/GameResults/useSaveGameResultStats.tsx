@@ -101,38 +101,37 @@ export async function useSaveGameResultStats (
 
     correctAnswers.forEach(el => {
       if (currentProgress[el.id]) {
-        currentProgress[el.id].guessed += 1;
-        const curStreak = currentProgress[el.id].guessStreak + 1;
+        currentProgress[el.id].g += 1;
+        const curStreak = currentProgress[el.id].s + 1;
         setBestStreak(curStreak);
-        currentProgress[el.id].guessStreak = manageGuessStreak(el, curStreak);
-        currentProgress[el.id].lastAnswerWasCorrect = true;
+        currentProgress[el.id].s = manageGuessStreak(el, curStreak);
+        currentProgress[el.id].l = true;
       }
 
       else {
         setBestStreak(1);
 
         currentProgress[el.id] = {
-          guessed: 1,
-          failed: 0,
-          guessStreak: 1,
-          word: el.word,
-          lastAnswerWasCorrect: true,
+          g: 1,
+          f: 0,
+          s: 1,
+          l: true,
         };
       }
     });
 
     wrongAnswers.forEach(el => {
       if (currentProgress[el.id]) {
-        currentProgress[el.id].failed += 1;
-        currentProgress[el.id].guessStreak = 0;
-        currentProgress[el.id].lastAnswerWasCorrect = false;
+        currentProgress[el.id].f += 1;
+        currentProgress[el.id].g = 0;
+        currentProgress[el.id].l = false;
       }
       else currentProgress[el.id] = {
-        guessed: 0,
-        failed: 1,
-        guessStreak: 0,
+        g: 0,
+        f: 1,
+        s: 0,
         word: el.word,
-        lastAnswerWasCorrect: false,
+        l: false,
       };
 
       if (isWordinListLearned(el.id)) {
@@ -195,6 +194,8 @@ export async function useSaveGameResultStats (
         fail: curDateResults.fail + wrongAnswers.length,
       };
     }
+    // console.log(JSON.stringify(newStatistic));
+    // console.log(JSON.stringify(newStatistic).length);
 
     await updateUserStatistic(userId, userToken, newStatistic);
 

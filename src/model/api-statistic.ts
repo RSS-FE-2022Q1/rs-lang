@@ -113,6 +113,7 @@ export async function addWordsToStatistic (userId: string, userToken: string, wo
     if (!currentStatistic.optional.wordsPerDay) currentStatistic.optional.wordsPerDay = {};
 
     const currentDateStats = currentStatistic.optional.wordsPerDay[currentDate];
+    // console.log(currentDateStats);
 
     if (currentDateStats) {
 
@@ -125,7 +126,11 @@ export async function addWordsToStatistic (userId: string, userToken: string, wo
       });
 
     } else {
-      currentStatistic.optional.wordsPerDay[currentDate] = update;
+      // console.log('else');
+
+      currentStatistic.optional.wordsPerDay[currentDate] = { learned: [], new: [] };
+      currentStatistic.optional.wordsPerDay[currentDate].learned = update.learned;
+      currentStatistic.optional.wordsPerDay[currentDate].new = update.new;
     }
 
     // console.log('updating stats with: ');

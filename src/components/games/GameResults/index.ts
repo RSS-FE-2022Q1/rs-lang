@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import { DaylyWordStats, IUserStatistic, WordStats } from '@/model/app-types';
 
 export function addWordsToStats (words: WordStats[], currentStats: IUserStatistic) {
@@ -25,6 +26,10 @@ export function addWordsToStats (words: WordStats[], currentStats: IUserStatisti
       });
 
     } else {
+      currentStats.optional.wordsPerDay[currentDate] = { learned: [], new: [] };
+      currentStats.optional.wordsPerDay[currentDate].learned = update.learned;
+      currentStats.optional.wordsPerDay[currentDate].new = update.new;
+
       currentDateStats = update;
     }
 
