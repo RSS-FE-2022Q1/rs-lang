@@ -64,10 +64,10 @@ export interface ProgressWordMap {
 
 export interface GameStatsProgressWord {
   word?: string;
-  guessed: number;
-  failed: number;
-  guessStreak : number;
-  lastAnswerWasCorrect: boolean;
+  g: number;
+  f: number;
+  s : number;
+  l: boolean;
 };
 
 export interface IUserStats {

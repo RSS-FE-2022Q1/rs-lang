@@ -141,7 +141,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
     return baseClass;
   };
 
-  const lastGuessBadgeClasses = `word-card-progress-badge ${wordProgress?.lastAnswerWasCorrect ? 'text-green-400' : 'text-yellow-600'}`;
+  const lastGuessBadgeClasses = `word-card-progress-badge ${wordProgress?.l ? 'text-green-400' : 'text-yellow-600'}`;
 
   return (
     <article className="word-card">
@@ -181,13 +181,13 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
         {authState.isLoggedIn && wordProgress && (
           <div className="word-card-progress">
             <span className="word-card-progress-badge text-green-400" data-tip="Правильных ответов в играх">
-              {wordProgress?.guessed}
+              {wordProgress?.g}
             </span>
             <span className="word-card-progress-badge text-yellow-600" data-tip="Ошибок">
-              {wordProgress?.failed}
+              {wordProgress?.f}
             </span>
             <span className={lastGuessBadgeClasses} data-tip="Поледний ответ">
-              {wordProgress?.lastAnswerWasCorrect ? '+' : '-'}
+              {wordProgress?.l ? '+' : '-'}
             </span>
           </div>
         )}
