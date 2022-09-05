@@ -1,0 +1,29 @@
+.team_card{
+    @apply w-3/12 lg:w-full py-8 my-2 px-4 flex flex-col items-center bg-gray-50 ;
+
+
+    & .card_photo {
+       @apply w-1/2 max-w-xs ;
+    }
+
+    & .card_photoImg {
+        @apply max-w-full rounded-full ;
+        height: auto;
+    }
+
+    & .card_name {
+        @apply my-2;
+    }
+
+    & .card_role {
+        @apply my-2 text-indigo-500 font-semibold	;
+    }
+
+    & .card_description {
+        @apply text-center py-4;
+    }
+
+    & .card_links {
+        @apply flex;
+    }
+}

@@ -1,0 +1,40 @@
+.games_list {
+  padding-top: 2rem;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.games_list li {
+  margin: 0 1rem;
+  width: 10rem;
+  height: 2rem;
+  border: 2px dashed #feb139;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.games a {
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.games a:hover {
+  color: #fff80a;
+}
+
+.games button:hover {
+  background-color: #fff80a;
+  color: #38015c;
+}
+
+
+@media (max-width:1024px){
+
+  .games-mobile{
+    @apply flex-col gap-10 items-center;
+
+  }
+}

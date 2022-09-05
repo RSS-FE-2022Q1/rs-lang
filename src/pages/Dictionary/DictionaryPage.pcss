@@ -1,0 +1,32 @@
+.dictionary {
+@apply flex flex-col justify-center items-center gap-3;
+
+
+  &-nav{
+
+    &-list{
+      @apply flex;
+      & li{
+        @apply ml-6;
+
+        &:hover{
+          cursor: pointer;
+          @apply text-violet-500;
+        }
+      }
+
+      
+      
+      & a{
+
+      }
+    }
+  }
+}
+
+@media (max-width:1024px){
+
+  .words-mobile{
+    @apply flex-col gap-10 items-center;
+  }
+}

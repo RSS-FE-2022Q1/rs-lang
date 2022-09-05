@@ -1,0 +1,77 @@
+.word-card {
+  @apply w-72 flex flex-col justify-between;
+ 
+
+
+  &-essence{
+    @apply flex gap-4 mb-2 justify-between;
+  }
+
+  &-controls {
+    @apply w-12;
+
+    & .usual {
+      @apply w-8  drop-shadow-lg; 
+     
+  
+      &.learned :hover{
+        cursor: pointer;
+        @apply bg-slate-100 rounded-md  fill-emerald-400;
+      }
+
+      &.learned :active{
+        @apply fill-emerald-100;
+      
+      } 
+
+      &.hard :hover{
+        cursor: pointer;
+        @apply bg-slate-100 rounded-md  fill-orange-400;
+      }
+
+      &.hard :active{
+        @apply fill-orange-100;
+      
+      } 
+    }
+
+    & .active-hard svg {
+      @apply w-10 fill-orange-400 ;
+  }
+
+  & .active-learned svg {
+    @apply w-10 fill-emerald-400 stroke-2 stroke-emerald-400 ;
+  }
+
+  }
+
+  &-image-wrapper{
+    position: relative;
+
+    & img {
+      transform: rotate(-1deg);
+      @apply rounded-md mb-4 ;
+    }
+  }
+
+  &-progress{
+    position:absolute;
+    
+
+    z-index:2;
+
+    &-badge{
+      @apply  
+      flex justify-center items-center w-6 h-6 m-1
+       text-base p-2  bg-black  rounded-full 
+       border-white border-2 cursor-help;
+    }
+   }
+
+  
+    
+  
+}
+
+
+

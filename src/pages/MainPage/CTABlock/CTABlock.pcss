@@ -1,0 +1,23 @@
+.cta {
+    @apply max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between flex flex-col items-center;
+
+
+    & .cta_heading {
+        @apply text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl sm:tracking-tight;
+    }
+
+    & .cta_buttons {
+        @apply mt-8 flex lg:mt-0 lg:flex-shrink-0;
+    }
+
+}
+
+@media (max-width: 1024px){
+
+    .cta{
+
+        & .cta_heading{
+            @apply mb-8;
+        }
+    }
+}

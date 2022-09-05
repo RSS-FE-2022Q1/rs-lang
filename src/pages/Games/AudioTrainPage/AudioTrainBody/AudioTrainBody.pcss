@@ -1,0 +1,130 @@
+.audiogame {
+    @apply w-3/5 bg-sky-100 px-5 py-2 border border-transparent shadow rounded-lg;
+    box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+    height: 38rem;
+    
+     & .audiogame_info {
+         @apply flex justify-between items-center h-24;
+     }
+ 
+     & .audiogame_controls {
+         @apply flex justify-between w-1/3;
+     }
+ 
+     & .audiogame_score {
+         @apply text-3xl flex w-1/3 justify-center items-center;
+ 
+         & .score_text {
+             @apply text-3xl;
+         }
+
+         & .score_cell {
+            @apply mx-2 flex items-center;
+         }
+
+        & .score_animate {
+            animation: zoom-in-zoom-out 0.5s ;
+        }
+
+        & .score_icon {
+            @apply h-6 w-6 mx-1;
+        }
+
+        & .score_icon_ok {
+            @apply text-green-600 ;
+        }
+
+        & .score_icon_fail {
+            @apply text-red-600 ;
+        }
+     }
+
+     & .audiogame_progress {
+        @apply w-1/3 flex justify-end;
+     }
+ 
+     & .audiogame_form {
+         @apply flex flex-col items-center;
+
+
+         & .audiogame_ask {
+            @apply flex justify-center items-center h-64;
+         }
+
+         & .audiogame_answers {
+            @apply flex w-full justify-between flex-wrap py-6; 
+         }
+
+         & .audiogame_answer {
+            @apply flex justify-center w-1/5 flex-col items-center px-2;
+         }
+
+         & .audiogame_answer_index {
+            @apply py-2 text-slate-700 font-semibold; 
+         }
+
+         & .audiogame_ans {
+            @apply flex flex-col items-center;
+            
+
+            & .answer_image_wrapper {
+                @apply h-44 w-44 my-2;
+                animation: fade-out 1.5s ;
+            }
+
+            & .answer_image {
+                @apply w-full h-full rounded-full shadow-xl;
+            }
+
+            & .answer_text{
+                @apply flex text-2xl text-blue-500 font-semibold py-2;
+
+            }
+         }
+
+         & .audiogame_next {
+            @apply w-full flex flex-col items-center;
+         }
+     }
+ }
+ 
+ @keyframes zoom-in-zoom-out {
+     0% {
+         transform: scale(1, 1);
+     }
+     100% {
+         transform: scale(1.25, 1.25);
+     }
+ }
+ 
+ @keyframes fade-out {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+
+  @media (max-width: 768px){
+
+    .audiogame{
+        @apply w-11/12 px-2;
+
+        & .audiogame_form {
+            /* @apply flex flex-col items-center; */
+            & .audiogame_ask {
+                @apply flex justify-center items-center h-20;
+             }
+
+            & .audiogame_answers {
+                @apply flex w-full justify-around flex-wrap py-6; 
+             }
+
+             & .audiogame_answer {
+                @apply flex justify-center w-2/5 flex-col items-center px-2;
+             }
+        }
+    }
+  }

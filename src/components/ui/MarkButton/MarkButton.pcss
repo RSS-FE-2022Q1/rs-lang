@@ -1,0 +1,78 @@
+.markbutton_wrapper{
+    @apply inline-flex rounded-md shadow mx-3 w-full;
+
+    & .markbutton_button{
+        @apply inline-flex items-center justify-center px-3 py-3 border border-transparent text-base font-medium rounded-md cursor-pointer w-full;
+        box-shadow: 4px 4px 8px 0px rgb(34 60 80 / 20%);
+    }
+
+    & .markbutton_default{
+        @apply text-indigo-600 bg-white hover:bg-indigo-50 h-16;
+    }
+
+
+    & .markbutton_content {
+        @apply flex items-center;
+
+        & .markbutton_icon {
+            @apply w-6 h-6;
+        }
+    
+        & .markbutton_text {
+            @apply w-full text-center px-1 first-letter:capitalize text-lg;
+        }
+
+        & .mark_yes {
+            @apply text-green-600;
+        }
+
+        & .mark_no {
+            @apply text-red-600;
+        }
+    }
+
+
+
+
+/* 
+
+
+
+    & .button_secondary{
+       @apply text-indigo-600 bg-white hover:bg-indigo-50;
+    }
+    
+    & .button_accept{
+       @apply text-white bg-green-600 hover:bg-green-500;
+    }
+
+    & .button_decline{
+       @apply text-white bg-red-600 hover:bg-red-500;
+    } */
+
+}
+
+@media (max-width: 768px){
+
+ .markbutton_wrapper{
+    @apply inline-flex rounded-md shadow mx-0 w-full;
+
+    & .markbutton_button{
+        @apply px-1 py-1;
+        box-shadow: 4px 4px 8px 0px rgb(34 60 80 / 20%);
+    }
+
+    & .markbutton_default{
+        @apply  h-10;
+    }
+
+    .markbutton_content {
+
+        .markbutton_text {
+            @apply w-full text-center px-1 first-letter:capitalize text-xs;
+        }
+    }
+ }
+
+   
+  }

@@ -1,0 +1,93 @@
+.sprint {
+   @apply w-3/5 bg-sky-100 px-5 py-2 border border-transparent shadow rounded-lg ;
+   box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+   height: 38rem;
+   
+    & .sprint_info {
+        @apply flex justify-between items-center;
+    }
+
+    & .sprint_controls {
+        @apply flex justify-between w-1/3;
+    }
+
+    & .sprint_score{
+        @apply text-3xl flex;
+
+        & .score_text {
+            @apply mx-2;
+        }
+    }
+
+    & .sprint_timer {
+        @apply w-1/3 flex justify-end;
+    }
+
+    & .score_animate {
+        animation: zoom-in-zoom-out 0.5s ;
+    }
+
+    & .sprint_form {
+        @apply flex flex-col items-center;
+    }
+
+    & .sprint_streak {
+        @apply py-1 text-2xl flex items-center w-full my-4;
+
+        & .streak_line_cell {
+            @apply w-full px-4;
+        }
+
+        & .multi_value {
+            @apply max-w-max;
+        }
+    }
+
+    & .sprint_picture {
+        @apply text-7xl my-5;
+    }
+
+    & .smile_animate {
+        animation: zoom-in-zoom-out 0.5s ;
+    }
+
+    & .sprint_ask {
+        @apply flex items-center py-2 w-full justify-center my-4;
+
+        & .streak_ask_cell {
+            @apply w-full justify-center text-center;
+        }
+
+        & .ask_word {
+            @apply text-5xl text-blue-800 font-semibold mx-2;
+        }
+    }
+
+    & .sprint_answer {
+        @apply text-2xl text-blue-500 font-semibold	 py-2 my-4;
+    }
+
+    & .sprint_buttons {
+        @apply my-4 ;
+    }
+}
+
+@keyframes zoom-in-zoom-out {
+    0% {
+        transform: scale(1, 1);
+    }
+    100% {
+        transform: scale(1.25, 1.25);
+    }
+}
+
+@media (max-width: 576px){
+    .sprint {
+        @apply w-11/12;
+
+        & .sprint_score{
+            @apply text-xl;
+    
+        }
+    }
+}

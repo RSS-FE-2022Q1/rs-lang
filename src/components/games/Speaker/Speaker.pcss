@@ -1,0 +1,31 @@
+.speaker {
+
+    & .speaker_container {
+        @apply flex justify-center relative;
+    }
+
+    & .speaker_image {
+        @apply z-10 px-2 h-24 w-24 flex justify-center items-center rounded-full bg-slate-400 cursor-pointer;
+    }
+    & .speaker_icon {
+        @apply h-12 w-12 text-white;
+    }
+
+    & .speaker_circle {
+        @apply h-24 w-24 rounded-full absolute opacity-0 bg-slate-400;
+        animation: scaleIn 0.6s infinite cubic-bezier(.36, .11, .89, .32);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+      transform: scale(1, 1);
+      opacity: .5;
+    }
+    to {
+      transform: scale(2.5, 2.5);
+      opacity: 0;
+    }
+  }
+
+

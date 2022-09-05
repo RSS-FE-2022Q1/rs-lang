@@ -1,0 +1,20 @@
+.dropdown {
+
+    & .dropdown_list {
+        @apply  absolute shadow-gray-300 shadow-sm border-transparent z-10 mx-4 px-0;
+    }
+
+    & .dropdown_hide {
+        display: none;
+    }
+
+    & .dropdown_item {
+        @apply px-8 py-2;
+
+        &:hover {
+            @apply bg-sky-100 cursor-pointer;
+        }
+    }
+
+}
+

@@ -1,0 +1,66 @@
+.textbook-group{
+     @apply pt-2;
+
+    @apply rounded;
+    
+    &-controls{
+        @apply flex justify-around mb-10 items-center p-2;
+    }
+
+    &-games-links{
+        a {
+            @apply p-2 m-2 rounded bg-gray-300 shadow-md inline-block; 
+
+            & svg {
+                @apply  stroke-violet-400;
+            }
+        }
+
+        a:hover{
+            @apply  shadow-blue-400;
+        }
+    }
+
+    &.group-done {
+        @apply bg-gradient-to-br from-green-200;
+      }
+
+   
+}
+
+@media (max-width: 1024px){
+
+    .textbook-group{
+   
+       
+       &-controls{
+
+        @apply mb-1;
+          
+       }
+   
+       &-games-links{
+
+           a {
+            @apply py-4 m-1 text-xs;
+
+               & svg {
+                @apply  w-4;
+               }
+           }
+   
+           a:hover{
+              
+           }
+       }
+   
+   
+   
+       &.group-done {
+          
+         }
+   
+      
+   }
+
+}

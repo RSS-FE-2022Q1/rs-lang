@@ -1,0 +1,29 @@
+.results {
+    @apply w-8/12 flex flex-col items-center ;
+
+    & .results_heading {
+        @apply text-xl py-1;
+    }
+}
+
+.results_table{ 
+    @apply flex w-full justify-between shadow-lg rounded-xl overflow-hidden; 
+
+    & .results_list{ 
+        @apply flex flex-col w-full text-center py-2;
+    }
+
+    & .results_wrong {
+        @apply bg-red-100;
+    }
+
+    & .results_correct {
+        @apply bg-green-100;
+    }
+
+    & .results_header {
+        @apply py-3 font-semibold;
+    }
+
+
+}

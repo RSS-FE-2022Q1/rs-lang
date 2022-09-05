@@ -1,0 +1,34 @@
+.navbutton {
+    @apply w-60 mx-10 ;
+    
+
+    & .navbutton_link{
+        @apply flex items-center border border-solid bg-gray-50 border-stone-100 -m-3 rounded-lg p-3  ;
+        box-shadow: 4px 4px 8px 0px rgba(34, 60, 80, 0.2);
+
+
+        &:hover {
+            @apply bg-gray-100;
+        }
+    }
+
+    & .navbutton_title {
+        @apply text-lg font-medium text-gray-900;
+    }
+
+    & .navbutton_descr {
+        @apply mt-1 text-sm text-gray-500 font-extralight ;
+    }
+
+    & .navbutton_icon {
+        @apply h-6 w-6 flex-shrink-0 text-indigo-600;
+
+        
+
+    }
+
+    & .active .navbutton_icon{
+        @apply fill-indigo-600;
+    }
+
+}

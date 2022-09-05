@@ -1,0 +1,143 @@
+.textbook{
+  @apply px-4 mb-8;
+}
+
+.groups-list {
+
+  @apply flex justify-center gap-2 mt-4 mb-4;
+
+
+  li {
+    @apply flex justify-center rounded  w-40 h-28 bg-cover shadow-gray-300 grayscale;
+    align-items: center;
+    
+    &:hover {
+      @apply rotate-2;
+      cursor: pointer;
+    }
+
+    .group-badge{
+      @apply  
+      flex justify-center items-center w-10 h-10 m-1
+       text-base p-2  rounded-full 
+       text-white border-2 cursor-help;
+    }
+  }
+
+  .group-active {
+    @apply grayscale-0 shadow-lg ;
+  }
+
+  a {
+    width:100%;
+    height:100%;
+  }
+  
+}
+
+.group-1{
+  background-image: url("../../assets/images/group-1.jpeg");
+
+  &.group-active{
+    @apply shadow-yellow-400;
+  }
+
+  & .group-badge{
+    @apply bg-gradient-to-r from-yellow-500 ;
+  }
+
+}
+
+.group-2{
+  background-image: url("../../assets/images/group-2.jpeg");
+
+  &.group-active{
+    @apply shadow-indigo-400;
+  }
+
+  & .group-badge{
+    @apply bg-gradient-to-r from-indigo-500  ;
+  }
+}
+
+.group-3{
+  background-image: url("../../assets/images/group-3.jpeg");
+
+  &.group-active{
+    @apply shadow-green-400;
+  }
+
+  & .group-badge{
+    @apply bg-gradient-to-r from-green-500;
+  }
+}
+
+.group-4{
+  background-image: url("../../assets/images/group-4.jpeg");
+
+  &.group-active{
+    @apply shadow-blue-400;
+  }
+
+
+  & .group-badge{
+    @apply bg-gradient-to-r from-blue-500;
+  }
+}
+
+.group-5{
+  background-image: url("../../assets/images/group-5.jpeg");
+
+  &.group-active{
+    @apply shadow-orange-400;
+  }
+
+  & .group-badge{
+    @apply bg-gradient-to-r from-orange-500;
+  }
+}
+
+.group-6{
+  background-image: url("../../assets/images/group-6.jpeg");
+
+  &.group-active{
+    @apply shadow-red-400;
+  }
+
+  & .group-badge{
+    @apply bg-gradient-to-r from-red-500;
+  }
+}
+
+@media (max-width: 1024px){
+
+  .textbook{
+    @apply mb-4;
+  }
+
+  main.content {
+  
+    padding: 0 0.25rem;
+  }
+  
+  .groups-list {
+  
+    @apply mb-1;
+  
+       li {
+           @apply h-24
+         }
+  }
+
+}
+
+@media (max-width: 576px){
+
+  .groups-list {
+  
+       li {
+           @apply h-16;
+         }
+  }
+
+}
