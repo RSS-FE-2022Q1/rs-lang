@@ -21,11 +21,46 @@
         }
     }
 
-
-
     &.group-done {
         @apply bg-gradient-to-br from-green-200;
       }
 
    
+}
+
+@media (max-width: 1024px){
+
+    .textbook-group{
+   
+       
+       &-controls{
+
+        @apply mb-1;
+          
+       }
+   
+       &-games-links{
+
+           a {
+            @apply py-4 m-1 text-xs;
+
+               & svg {
+                @apply  w-4;
+               }
+           }
+   
+           a:hover{
+              
+           }
+       }
+   
+   
+   
+       &.group-done {
+          
+         }
+   
+      
+   }
+
 }

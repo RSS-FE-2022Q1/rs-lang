@@ -105,3 +105,26 @@
       opacity: 1;
     }
   }
+
+
+  @media (max-width: 768px){
+
+    .audiogame{
+        @apply w-11/12 px-2;
+
+        & .audiogame_form {
+            /* @apply flex flex-col items-center; */
+            & .audiogame_ask {
+                @apply flex justify-center items-center h-20;
+             }
+
+            & .audiogame_answers {
+                @apply flex w-full justify-around flex-wrap py-6; 
+             }
+
+             & .audiogame_answer {
+                @apply flex justify-center w-2/5 flex-col items-center px-2;
+             }
+        }
+    }
+  }

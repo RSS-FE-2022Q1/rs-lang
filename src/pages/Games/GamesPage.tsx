@@ -7,7 +7,7 @@ import './GamesPage.pcss';
 const GamesPage = (): JSX.Element => (
   <section className="games">
 
-    <div className="flex w-full justify-center my-8">
+    <div className="flex w-full justify-center my-8 games-mobile">
       <NavButton
         href='/games/sprint'
         icon={{ icon: LightningBoltIcon }}

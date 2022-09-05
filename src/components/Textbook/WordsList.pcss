@@ -3,7 +3,6 @@
 .words-list {
   @apply pt-10 flex flex-1 flex-wrap gap-4 justify-center relative pb-10;
   
-
   &-item:nth-child(even){
     & .word-card-image-wrapper img {
       transform: rotate(2deg);
@@ -21,3 +20,15 @@
   }
 }
 
+
+@media (max-width: 1024px){
+
+  .words-list {
+  @apply pt-4 pb-1;
+
+  .list-done {
+    @apply top-0 -left-2 text-sm w-14; 
+  }
+
+  }
+}

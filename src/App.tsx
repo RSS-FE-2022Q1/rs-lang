@@ -55,13 +55,15 @@ const App = ():JSX.Element => {
 
   if(isLoggedIn){
     setTimeout(() =>{
-      console.log(authState);
-      console.log('REFRESH');
       apiUsers.getNewTokensForTheUser(authState.userId, authState.refreshToken)
         .then(res=>{
           if(res && res.token && res.refreshToken){
-            const newTokens = { newToken:res.token, refreshToken:res.refreshToken };
-            dispatch(authActions.refreshTokens(newTokens));
+            const refreshData = {
+              newToken:res.token,
+              refreshToken:res.refreshToken,
+              newAuthDate: new Date().toISOString(),
+            };
+            dispatch(authActions.refreshTokens(refreshData));
             window.location.reload();
           }
         })
@@ -94,7 +96,7 @@ const App = ():JSX.Element => {
     },
     {
       path: '/dictionary',
-      element: isLoggedIn ? <DictionaryPage /> : <Navigate to="/textbook" />,
+      element: <DictionaryPage/>,
       children: [
         { path: 'difficult', element: <DifficultWords /> },
         { path: 'learned', element: <LearnedWords /> },
@@ -116,8 +118,8 @@ const App = ():JSX.Element => {
         },
       ],
     },
-    { path: '/auth', element: !isLoggedIn ? <AuthPage /> : <Navigate to="/profile" /> },
-    { path: '/profile', element: isLoggedIn ? <ProfilePage /> : <Navigate to="/auth" /> },
+    { path: '/auth', element: <AuthPage /> },
+    { path: '/profile', element: <ProfilePage /> },
     { path: '*', element: <Navigate to="/" /> },
   ];
 
@@ -129,12 +131,15 @@ const App = ():JSX.Element => {
     }
 
     const userData = { userId:authState.userId, token:authState.token };
+
     const  getUsersWords = async () => {
       await dispatch(fetchUserWords(userData));
     };
+
     const getUserStatistic = async () => {
       await dispatch(fetchUsersStats(userData));
     };
+
     getUsersWords().catch(() => {});
     getUserStatistic().catch(() => {});
 

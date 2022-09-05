@@ -1,13 +1,26 @@
 import { PuzzleIcon, AcademicCapIcon, SparklesIcon } from '@heroicons/react/outline';
-import { Outlet } from '@tanstack/react-location';
+import { Outlet , useNavigate } from '@tanstack/react-location';
+import { useSelector } from 'react-redux';
+
+import { useEffect } from 'react';
 
 import { NavButton } from '@/components/ui/NavButton/NavButton';
 import './DictionaryPage.pcss';
+import { RootState } from '@/store/store';
 
-const DictionaryPage = (): JSX.Element => (
-  <section className='dictionary'>
+const DictionaryPage = (): JSX.Element => {
+  const navigate = useNavigate();
+  const authState = useSelector((state:RootState) => state.authentication);
 
-    <div className="flex w-full justify-center my-8">
+  useEffect(() => {
+    if(!authState.isLoggedIn) {
+      navigate({ to: '/textbook' });
+    }
+  }, [authState.isLoggedIn, navigate]);
+
+  return   <section className='dictionary'>
+
+    <div className="flex w-full justify-center my-8 words-mobile">
 
       <NavButton
         href='difficult'
@@ -34,6 +47,6 @@ const DictionaryPage = (): JSX.Element => (
 
     <Outlet />
 
-  </section>
-);
+  </section>;
+};
 export default DictionaryPage;

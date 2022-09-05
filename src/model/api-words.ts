@@ -38,8 +38,8 @@ export function getWords (group: string, page: string) {
 export async function getIdOfAllWordsOfTheGroup (group:string) {
   const PAGES_PER_GROUP = 30;
   const PAGES = Array.from([...Array(PAGES_PER_GROUP).keys()]);
-  console.log('group', group);
-  console.log('pages', PAGES);
+  // console.log('group', group);
+  // console.log('pages', PAGES);
 
   const wordsOfThisGroupByPages = await Promise.all(
     PAGES.map(p =>  getWords(group, p.toString())),

@@ -24,3 +24,36 @@
 
 }
 
+@media (max-width: 1024px){
+
+    .footer {
+        @apply flex w-full  justify-center;
+    
+        & .footer_wrapper {
+            @apply w-10/12  px-1 pt-1 flex-col items-center justify-center gap-2;
+        }
+    
+        & .footer_year {
+            @apply text-xs;
+        }
+    
+        & .footer_copyrights {
+            @apply flex-col items-center  gap-1 text-xs;
+
+            & .social_link{
+                @apply w-32;
+            }
+        }
+    
+        & .footer_logo {
+            @apply w-8 ;
+    
+            & .footer_icon {
+                @apply w-14 ;
+            }
+    
+        }
+    
+    }
+  }
+

@@ -58,10 +58,10 @@ export async function createUserWord (
         return res.json();
       }
       throw new Error(res.statusText);
-    }).then((res:UserWord) => {
-      console.log('createUserWord Response: ', res);
-      return res;
-    });
+    }).then((res:UserWord) =>
+      // console.log('createUserWord Response: ', res);
+      res,
+    );
   }catch(err){console.log(err);}
   return rawResponse;
 }

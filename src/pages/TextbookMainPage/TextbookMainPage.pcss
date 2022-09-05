@@ -2,20 +2,15 @@
   @apply px-4 mb-8;
 }
 
-
-
 .groups-list {
 
   @apply flex justify-center gap-2 mt-4 mb-4;
 
 
   li {
-    @apply flex justify-center rounded  w-40 h-28 bg-cover   shadow-gray-300 grayscale;
+    @apply flex justify-center rounded  w-40 h-28 bg-cover shadow-gray-300 grayscale;
     align-items: center;
     
-   
-    
-
     &:hover {
       @apply rotate-2;
       cursor: pointer;
@@ -29,12 +24,9 @@
     }
   }
 
- 
-
   .group-active {
     @apply grayscale-0 shadow-lg ;
   }
-
 
   a {
     width:100%;
@@ -53,7 +45,6 @@
   & .group-badge{
     @apply bg-gradient-to-r from-yellow-500 ;
   }
-
 
 }
 
@@ -101,7 +92,6 @@
     @apply shadow-orange-400;
   }
 
-
   & .group-badge{
     @apply bg-gradient-to-r from-orange-500;
   }
@@ -114,10 +104,40 @@
     @apply shadow-red-400;
   }
 
-
   & .group-badge{
     @apply bg-gradient-to-r from-red-500;
   }
 }
 
+@media (max-width: 1024px){
 
+  .textbook{
+    @apply mb-4;
+  }
+
+  main.content {
+  
+    padding: 0 0.25rem;
+  }
+  
+  .groups-list {
+  
+    @apply mb-1;
+  
+       li {
+           @apply h-24
+         }
+  }
+
+}
+
+@media (max-width: 576px){
+
+  .groups-list {
+  
+       li {
+           @apply h-16;
+         }
+  }
+
+}

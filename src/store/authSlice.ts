@@ -76,12 +76,14 @@ export const authSlice = createSlice({
       localStorage.removeItem('authDate');
     },
 
-    refreshTokens: (state, action:PayloadAction<{newToken:string; refreshToken: string}>) => {
-      const { newToken, refreshToken } = action.payload;
+    refreshTokens: (state, action:PayloadAction<{newToken:string; refreshToken: string; newAuthDate:string}>) => {
+      const { newToken, refreshToken, newAuthDate } = action.payload;
       state.token = newToken;
       state.refreshToken = refreshToken;
+      state.authDate = newAuthDate;
       localStorage.setItem('token', newToken);
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('authDate', newAuthDate);
     },
   },
 });

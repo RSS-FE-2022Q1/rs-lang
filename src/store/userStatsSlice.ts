@@ -36,7 +36,7 @@ const userStatsSlice = createSlice({
     },
     addLearnedPage:(state, action:PayloadAction<{group: string; learnedPageNumber:string}>) => {
       const  { group, learnedPageNumber } = action.payload;
-      console.log(group, learnedPageNumber);
+      // console.log(group, learnedPageNumber);
       if(state.userLearnedPages[group]){
         state.userLearnedPages[group][learnedPageNumber] = true;
       }
@@ -46,7 +46,7 @@ const userStatsSlice = createSlice({
   extraReducers:builder => {
     builder.addCase(fetchUsersStats.fulfilled, (state, action) => {
       const stats = action.payload?.optional.gamesWordsProgress;
-      console.log('stats', stats);
+      // console.log('stats', stats);
       if(stats){
         state.userProgress = stats;
       }

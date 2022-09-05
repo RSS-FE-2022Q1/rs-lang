@@ -67,3 +67,23 @@
             
         }
     }
+
+
+    @media (max-width: 768px){
+    
+        .stats_table {
+            & .stats_line {
+                @apply px-2 py-5 sm:gap-2 sm:px-3 flex flex-col;
+            }
+
+            & .stats_line_header {
+                @apply text-sm w-full text-center;
+            }
+
+            & .stats_line_content {
+                @apply w-4/6 text-center;
+            }
+    
+        }
+    
+    }

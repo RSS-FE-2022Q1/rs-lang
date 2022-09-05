@@ -10,7 +10,6 @@ interface IPagination {
   pagesStatus:boolean[];
 }
 const Pagination = React.memo((props: IPagination): JSX.Element => {
-  console.log('Pagination');
   const {
     totalElements,
     elementsPerPage,
