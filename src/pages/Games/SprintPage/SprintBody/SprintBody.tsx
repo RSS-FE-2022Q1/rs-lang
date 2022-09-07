@@ -74,7 +74,7 @@ export const SprintBody = (
       wordList.current.splice(index, 1);
       usedWords.current.push(assigment);
 
-      if (Math.random() < 0.5) {
+      if (Math.random() < 0.5 ) {
         const randomIndex = getRandomIndex(currentWords.current.length, [index]);
 
         assigment.translateProposal = [(currentWords.current[randomIndex].wordTranslate)];
@@ -104,12 +104,15 @@ export const SprintBody = (
 
       const initData = (data: Word[]) => {
         wordList.current = [...data];
-        currentWords.current = [...data];
         setFirstRun(false);
         getAssignment();
       };
 
       if (startedFromBook) {
+        loadWords(level, page)
+          .then((data: Word[])=>{
+            currentWords.current = [...data];
+          }).catch(()=>{});
 
         loadWordsWithoutLearned(level, page, authState.userId, authState.token)
           .then((data: Word[])=>{
@@ -120,6 +123,7 @@ export const SprintBody = (
 
         loadWords(level, page)
           .then((data: Word[])=>{
+            currentWords.current = [...data];
             initData(data);
           }).catch(()=>{});
       }
