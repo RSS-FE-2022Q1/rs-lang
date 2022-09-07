@@ -164,7 +164,6 @@ export const AudioTrainBody = (
 
       const initData = (data: Word[]) => {
         wordList.current = [...data];
-        currentWords.current = [...data];
         setTaskTotal(data.length);
         setFirstRun(false);
         resetAnswerButtons();
@@ -172,6 +171,10 @@ export const AudioTrainBody = (
       };
 
       if (startedFromBook) {
+        loadWords(level, page)
+          .then((data: Word[]) => {
+            currentWords.current = [...data];
+          }).catch(() => { });
 
         loadWordsWithoutLearned(level, page, authState.userId, authState.token)
           .then((data: Word[]) => {
@@ -182,6 +185,7 @@ export const AudioTrainBody = (
 
         loadWords(level, page)
           .then((data: Word[]) => {
+            currentWords.current = [...data];
             initData(data);
           }).catch(() => { });
       }
