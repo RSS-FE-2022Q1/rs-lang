@@ -15,7 +15,6 @@ export async function updateUserStatistic (userId: string, token: string, newSta
     'Content-Type': 'application/json',
   };
   const body = JSON.stringify(newStats);
-  console.log(body);
 
   let result: IUserStatistic | undefined;
 
@@ -26,9 +25,6 @@ export async function updateUserStatistic (userId: string, token: string, newSta
       result = await response.json() as IUserStatistic;
     }
   } catch (e) { throw new Error(); }
-
-  // console.log('updateUserStatistic');
-  // console.log(result);
 
   return result;
 
@@ -101,8 +97,6 @@ export async function getUserStatistic (userId: string, token: string) {
   catch (e) {
     throw new Error();
   }
-  // console.log(JSON.stringify(result));
-  // console.log(JSON.stringify(result).length);
 
   return result;
 }

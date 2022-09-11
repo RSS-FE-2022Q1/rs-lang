@@ -150,8 +150,6 @@ export async function useSaveGameResultStats (
         fail: curDateResults.fail + wrongAnswers.length,
       };
     }
-    // console.log(JSON.stringify(newStatistic));
-    // console.log(JSON.stringify(newStatistic).length);
 
     addWordsProgressStats(newStatistic);
 

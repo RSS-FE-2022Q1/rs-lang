@@ -233,12 +233,13 @@ export async function setUserWordDifficulty (
 
   // ----------------------------------------------------------
 
+  const curDate = new Date().toLocaleDateString('en-US');
   const updUserWord: UserWord = {
     difficulty,
     optional: {
       wordId,
       statistic,
-      postDate: new Date().toLocaleDateString('en-US'),
+      postDate: curDate,
     },
   };
 

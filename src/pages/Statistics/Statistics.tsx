@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import './Statistics.pcss';
 
 import { useSelector } from 'react-redux';
@@ -85,21 +86,24 @@ const Statistics = (): JSX.Element => {
 
       if (currentStatistic) setStats(currentStatistic);
 
-      if (currentStatistic?.optional.wordsPerDay) {
-        const labels: string[] = [];
-        const learned: number[] = [];
-        const newWords: number[] = [];
-        Object.entries(currentStatistic?.optional.wordsPerDay)
-          .forEach(([key, value]) => {
-            labels.push(key);
-            learned.push(value.learned.length);
-            newWords.push(value.new.length);
-          });
-        setgraphWordsLabels(labels);
-        setgraphWordsValues(learned);
-        setgraphNewWordsValues(newWords);
-        setgraphDataReady(true);
+      const learningDays = currentStatistic?.optional.learningDays.days;
+      const learned: number[] = [];
+      const newWords: number[] = [];
+
+      for await (const day of learningDays) {
+        const lwc = await getUserWordsCount(authState.userId, authState.token, 'learned', day);
+        if (lwc !== undefined)
+          learned.push(lwc);
+
+        const nwc = await getUserWordsCount(authState.userId, authState.token, 'new', day);
+        if (nwc !== undefined)
+          newWords.push(nwc);
       }
+
+      setgraphWordsLabels(learningDays);
+      setgraphWordsValues(learned);
+      setgraphNewWordsValues(newWords);
+      setgraphDataReady(true);
 
       if (currentStatistic?.optional.gamesStatistic.resultsPerDay) {
         const labels: string[] = [];
