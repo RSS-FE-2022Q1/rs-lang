@@ -9,7 +9,7 @@ import { TableCard } from './TableCard/TableCard';
 
 import { emptyStats, getUserStatistic } from '@/model/api-statistic';
 import { getUserWordsCount } from '@/model/api-userWords';
-import { GameResStatsItem, GamesPerDayMap, GameStatsTotal, IUserStatistic, ResultsPerDayMap, StatsWordDifficulty, WordsPerDayMap } from '@/model/app-types';
+import { GameResStatsItem, GamesPerDayMap, GameStatsTotal, IUserStatistic, ResultsPerDayMap } from '@/model/app-types';
 import { GameType } from '@/model/games-types';
 import { RootState } from '@/store/store';
 
@@ -51,6 +51,9 @@ const Statistics = (): JSX.Element => {
   const [learnedCount, setLC] = useState<number>(0);
   const [hardCount, setHC] = useState<number>(0);
 
+  const [learnedTodayCount, setLTC] = useState<number>(0);
+  const [newTodayCount, setNTC] = useState<number>(0);
+
   const [stats, setStats] = useState<IUserStatistic>();
 
   const [graphWordsLabels, setgraphWordsLabels] = useState<string[]>([]);
@@ -71,6 +74,11 @@ const Statistics = (): JSX.Element => {
       if (lc) setLC(lc);
       const hc = await getUserWordsCount(authState.userId, authState.token, 'hard');
       if (hc) setHC(hc);
+
+      const ltc = await getUserWordsCount(authState.userId, authState.token, 'learned', currDate);
+      if (ltc) setLTC(ltc);
+      const ntc = await getUserWordsCount(authState.userId, authState.token, 'new', currDate);
+      if (ntc) setNTC(ntc);
 
       const currentStatistic =
         await getUserStatistic(authState.userId, authState.token) || emptyStats();
@@ -110,12 +118,6 @@ const Statistics = (): JSX.Element => {
     loadData().catch(() => { });
   }, [authState.userId, authState.token, currDate]);
 
-  const getWordsCount = (
-    entry: WordsPerDayMap | undefined,
-    type: StatsWordDifficulty,
-  ) => (entry && Object.keys(entry).includes(currDate))
-    ? entry[currDate][type].length : 0;
-
   const getData = (
     entry: GamesPerDayMap | undefined,
     game: GameType,
@@ -150,11 +152,11 @@ const Statistics = (): JSX.Element => {
           items={[
             {
               title: 'Встречено новых слов',
-              content: `${getWordsCount(stats?.optional.wordsPerDay, 'new') || '-'}`,
+              content: `${newTodayCount || '-'}`,
             },
             {
               title: 'Изучено слов',
-              content: `${getWordsCount(stats?.optional.wordsPerDay, 'learned') || '-'}`,
+              content: `${learnedTodayCount || '-'}`,
             },
           ]}
         />

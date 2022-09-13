@@ -250,9 +250,11 @@ export async function getUserWordsCount (
   userId: string,
   token: string,
   wordType: UserWordDifficulty,
+  forDay?: string,
 ){
   const url = new URL (`${API_ENDPOINT}/users/${userId}/aggregatedWords`);
-  const filter = `filter={"$and":[{"userWord.difficulty":"${wordType}"}]}`;
+  const filterbyDate = forDay? `, "userWord.optional.postDate": "${forDay}"` : '';
+  const filter = `filter={"$and":[{"userWord.difficulty":"${wordType}" ${filterbyDate}}]}`;
   const queryParams = new URLSearchParams(filter);
   url.search = queryParams.toString(); // url + ? + params
   let rawResponse;
