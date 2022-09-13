@@ -74,8 +74,9 @@ export interface GameStatsProgressWord {
 };
 
 export interface IUserStats {
-  gamesWordsProgress: ProgressWordMap;
-  wordsPerDay: WordsPerDayMap;
+  // gamesWordsProgress: ProgressWordMap;
+  wordsPerDay?: WordsPerDayMap;
+  learningDays: {days: Array<string>};
   gamesStatistic: GameStatisticMap;
 };
 

@@ -1,8 +1,10 @@
 import { useSelector } from 'react-redux';
 
+import { addWordsProgressStats } from './index';
+
 import { emptyStats, getUserStatistic, updateUserStatistic } from '@/model/api-statistic';
 import { getUserWords, setUserWordDifficulty } from '@/model/api-userWords';
-import {  UserWordDifficulty } from '@/model/app-types';
+import { UserWordDifficulty } from '@/model/app-types';
 import { GameType, ISprintWord } from '@/model/games-types';
 import { RootState } from '@/store/store';
 
@@ -18,7 +20,7 @@ export async function useSaveGameResultStats (
   wrongAnswers: ISprintWord[],
 ) {
 
-  const correctAnswerIds = correctAnswers.map(el=>el.id);
+  const correctAnswerIds = correctAnswers.map(el => el.id);
 
   const authState = useSelector((state: RootState) => state.authentication);
 
@@ -27,7 +29,6 @@ export async function useSaveGameResultStats (
     // Get current stats
 
     const currentStatistic = await getUserStatistic(userId, userToken) || emptyStats();
-    const currentProgress = currentStatistic.optional.gamesWordsProgress || {};
     const currentDate = new Date().toLocaleDateString('en-US');
 
     // Get user words data
@@ -51,21 +52,6 @@ export async function useSaveGameResultStats (
     const removeWordFormLearned = async (word: ISprintWord) => {
       await setWordDifficulty(word, 'new', false);
     };
-
-    // const saveWordAsLearned = async (word: ISprintWord) => {
-    //   await setWordDifficulty(word, 'learned', true);
-
-    //   addWordsToStats([{ id: word.id, type: 'learned' }], currentStatistic);
-    // };
-
-    // const saveWordsAsNew = (words: ISprintWord[]) => {
-    //   words.forEach(el => {
-    //     setWordDifficulty(el, 'new', correctAnswerIds.includes(el.id)).catch(() => { });
-    //   });
-
-    //   const newStats: WordStats[] = words.map(el => ({ id: el.id, type: 'new' }));
-    //   addWordsToStats(newStats, currentStatistic);
-    // };
 
     const saveUserWordData = (words: ISprintWord[], status: UserWordDifficulty) => {
       words.forEach(el => {
@@ -111,10 +97,9 @@ export async function useSaveGameResultStats (
 
     });
 
-    // const newStatistic = await getUserStatistic(userId, userToken) || emptyStats();
-    const newStatistic = currentStatistic;
+    //  Statistic object
 
-    // newStatistic.optional.gamesWordsProgress = currentProgress;
+    const newStatistic = currentStatistic;
 
     const gameCounter = newStatistic.optional.gamesStatistic.gamesTotalCount[game] || 0;
     newStatistic.optional.gamesStatistic.gamesTotalCount[game] = gameCounter + 1;
@@ -167,6 +152,8 @@ export async function useSaveGameResultStats (
     }
     // console.log(JSON.stringify(newStatistic));
     // console.log(JSON.stringify(newStatistic).length);
+
+    addWordsProgressStats(newStatistic);
 
     await updateUserStatistic(userId, userToken, newStatistic);
 

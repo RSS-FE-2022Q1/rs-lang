@@ -112,7 +112,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
 
     } else if(renderedWordId){
       await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, 'learned').catch(() => {});
-      await addWordsToStatistic(authState.userId, authState.token, [{ id: wordObj.id, type:'learned' }]);
+      await addWordsToStatistic(authState.userId, authState.token);
 
       const newWord:UserWord = {
         difficulty: 'learned',
@@ -123,6 +123,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
           postDate: new Date().toLocaleDateString('en-US'),
         },
       };
+
       dispatch(userWordsActions.addUserWord(newWord));
     }
 

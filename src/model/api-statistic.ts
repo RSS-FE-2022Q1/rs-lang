@@ -1,5 +1,6 @@
-import { DaylyWordStats, IUserStatistic, IUserStatisticResponse, WordStats } from './app-types';
+import { IUserStatistic, IUserStatisticResponse } from './app-types';
 
+import { addWordsProgressStats } from '@/components/games/GameResults/index';
 import { API_ENDPOINT } from '@/model/constants';
 
 // Update user's statistic
@@ -14,6 +15,7 @@ export async function updateUserStatistic (userId: string, token: string, newSta
     'Content-Type': 'application/json',
   };
   const body = JSON.stringify(newStats);
+  console.log(body);
 
   let result: IUserStatistic | undefined;
 
@@ -35,12 +37,13 @@ export async function updateUserStatistic (userId: string, token: string, newSta
 export const emptyStats = () => {
   const currDate = new Date().toLocaleDateString('en-US');
   const wordsPerDay = { [currDate]: { learned: [], new: [] } };
+  const learningDays = { days: [] };
 
   return {
     learnedWords: 0,
     optional: {
-      gamesWordsProgress: {},
       wordsPerDay,
+      learningDays,
       gamesStatistic: {
         gamesPerDay: {},
         resultsPerDay: {},
@@ -98,55 +101,19 @@ export async function getUserStatistic (userId: string, token: string) {
   catch (e) {
     throw new Error();
   }
-  console.log(JSON.stringify(result));
-  console.log(JSON.stringify(result).length);
+  // console.log(JSON.stringify(result));
+  // console.log(JSON.stringify(result).length);
 
   return result;
 }
 
-export async function addWordsToStatistic (userId: string, userToken: string, words: WordStats[]) {
+export async function addWordsToStatistic (userId: string, userToken: string) {
 
-  const update: DaylyWordStats = {
-
-    'learned': [...new Set(words.filter(el => el.type === 'learned').map(el => el.id))],
-    'new': [...new Set(words.filter(el => el.type === 'new').map(el => el.id))],
-  };
-
-  const currentDate = new Date().toLocaleDateString('en-US');
   const currentStatistic = await getUserStatistic(userId, userToken) || emptyStats();
 
-  // console.log('current Stats');
-  // console.log(currentStatistic);
-
   if (currentStatistic) {
-    if (!currentStatistic.optional.wordsPerDay) currentStatistic.optional.wordsPerDay = {};
-
-    const currentDateStats = currentStatistic.optional.wordsPerDay[currentDate];
-    // console.log(currentDateStats);
-
-    if (currentDateStats) {
-
-      Object.keys(currentDateStats).forEach(key => {
-        const entry = currentDateStats[key] as Array<string>;
-        const updateEntry = update[key] as Array<string>;
-
-        const upd = new Set([...entry, ...updateEntry]);
-        currentDateStats[key] = [...upd];
-      });
-
-    } else {
-      // console.log('else');
-
-      currentStatistic.optional.wordsPerDay[currentDate] = { learned: [], new: [] };
-      currentStatistic.optional.wordsPerDay[currentDate].learned = update.learned;
-      currentStatistic.optional.wordsPerDay[currentDate].new = update.new;
-    }
-
-    // console.log('updating stats with: ');
-    // console.log(currentStatistic);
-
+    addWordsProgressStats(currentStatistic);
     await updateUserStatistic(userId, userToken, currentStatistic);
-
   }
 
 }
