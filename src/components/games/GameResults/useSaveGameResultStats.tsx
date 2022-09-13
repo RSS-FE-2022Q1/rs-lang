@@ -1,11 +1,8 @@
 import { useSelector } from 'react-redux';
 
-import { addWordsToStats } from './index';
-
 import { emptyStats, getUserStatistic, updateUserStatistic } from '@/model/api-statistic';
 import { getUserWords, setUserWordDifficulty } from '@/model/api-userWords';
-import { StatsWordDifficulty, WordStats } from '@/model/app-types';
-import { GAMES_EDU_PROGRESS } from '@/model/constants';
+import {  UserWordDifficulty } from '@/model/app-types';
 import { GameType, ISprintWord } from '@/model/games-types';
 import { RootState } from '@/store/store';
 
@@ -22,7 +19,6 @@ export async function useSaveGameResultStats (
 ) {
 
   const correctAnswerIds = correctAnswers.map(el=>el.id);
-  const wrongAnswerIds = wrongAnswers.map(el=>el.id);
 
   const authState = useSelector((state: RootState) => state.authentication);
 
@@ -42,10 +38,11 @@ export async function useSaveGameResultStats (
 
     const setWordDifficulty = async (
       word: ISprintWord,
-      difficulty: StatsWordDifficulty,
+      difficulty: UserWordDifficulty,
       lastAnswer: boolean,
     ) => {
       const isEntryExisted = !!(allWords?.find(el => el.optional.wordId === word.id));
+
       await setUserWordDifficulty(
         userId, userToken, word.id, difficulty, isEntryExisted, lastAnswer,
       ).catch(() => { });
@@ -55,42 +52,29 @@ export async function useSaveGameResultStats (
       await setWordDifficulty(word, 'new', false);
     };
 
-    const saveWordAsLearned = async (word: ISprintWord) => {
-      await setWordDifficulty(word, 'learned', true);
+    // const saveWordAsLearned = async (word: ISprintWord) => {
+    //   await setWordDifficulty(word, 'learned', true);
 
-      addWordsToStats([{ id: word.id, type: 'learned' }], currentStatistic);
-    };
+    //   addWordsToStats([{ id: word.id, type: 'learned' }], currentStatistic);
+    // };
 
-    const saveWordsAsNew = (words: ISprintWord[]) => {
+    // const saveWordsAsNew = (words: ISprintWord[]) => {
+    //   words.forEach(el => {
+    //     setWordDifficulty(el, 'new', correctAnswerIds.includes(el.id)).catch(() => { });
+    //   });
+
+    //   const newStats: WordStats[] = words.map(el => ({ id: el.id, type: 'new' }));
+    //   addWordsToStats(newStats, currentStatistic);
+    // };
+
+    const saveUserWordData = (words: ISprintWord[], status: UserWordDifficulty) => {
       words.forEach(el => {
-        setWordDifficulty(el, 'new', correctAnswerIds.includes(el.id)).catch(() => { });
+        setWordDifficulty(el, status, correctAnswerIds.includes(el.id)).catch(() => { });
       });
-
-      const newStats: WordStats[] = words.map(el => ({ id: el.id, type: 'new' }));
-      addWordsToStats(newStats, currentStatistic);
     };
 
     const isWordinListLearned = (wordId: string) => !!(learnedWords.find(el => el === wordId));
     const isWordinListHard = (wordId: string) => !!(hardWords?.find(el => el === wordId));
-
-    const manageGuessStreak = (word: ISprintWord, currentStreak: number) => {
-      let streak = currentStreak;
-      if (
-        !(isWordinListLearned(word.id))
-        && currentStreak === GAMES_EDU_PROGRESS.guessWordToLearn
-      ) {
-        saveWordAsLearned(word).catch(() => { });
-        streak = 0;
-      }
-      if (
-        isWordinListHard(word.id)
-        && currentStreak === GAMES_EDU_PROGRESS.guessHardWordToLearn
-      ) {
-        saveWordAsLearned(word).catch(() => { });
-        streak = 0;
-      }
-      return streak;
-    };
 
     // Define beststreak
     let bestStreak = 0;
@@ -99,55 +83,33 @@ export async function useSaveGameResultStats (
     };
 
     // Save new words
+    const encounteredWords = [...correctAnswers, ...wrongAnswers];
 
-    const newWords = [...correctAnswers, ...wrongAnswers]
+    const newWords = [...encounteredWords]
       .filter(el => (!isWordinListLearned(el.id) && !isWordinListHard(el.id)));
 
-    saveWordsAsNew(newWords);
+    saveUserWordData(newWords, 'new');
+
+    const alreadyLearnedWords = [...encounteredWords]
+      .filter(el => (isWordinListLearned(el.id)));
+
+    saveUserWordData(alreadyLearnedWords, 'learned'); // just update statistic
+
+    const hardButNewWords = [...encounteredWords]
+      .filter(el => (isWordinListHard(el.id)));
+
+    saveUserWordData(hardButNewWords, 'hard');  // just update statistic
 
     // Loop thru answers
 
-    // correctAnswers.forEach(el => {
-    //   if (currentProgress[el.id]) {
-    //     currentProgress[el.id].g += 1;
-    //     const curStreak = currentProgress[el.id].s + 1;
-    //     setBestStreak(curStreak);
-    //     currentProgress[el.id].s = manageGuessStreak(el, curStreak);
-    //     currentProgress[el.id].l = true;
-    //   }
+    wrongAnswers.forEach(el => {
 
-    //   else {
-    //     setBestStreak(1);
+      if (isWordinListLearned(el.id)) {
+        removeWordFormLearned(el)
+          .catch(() => { });
+      }
 
-    //     currentProgress[el.id] = {
-    //       g: 1,
-    //       f: 0,
-    //       s: 1,
-    //       l: true,
-    //     };
-    //   }
-    // });
-
-    // wrongAnswers.forEach(el => {
-    //   if (currentProgress[el.id]) {
-    //     currentProgress[el.id].f += 1;
-    //     currentProgress[el.id].g = 0;
-    //     currentProgress[el.id].l = false;
-    //   }
-    //   else currentProgress[el.id] = {
-    //     g: 0,
-    //     f: 1,
-    //     s: 0,
-    //     word: el.word,
-    //     l: false,
-    //   };
-
-    //   if (isWordinListLearned(el.id)) {
-    //     removeWordFormLearned(el)
-    //       .catch(() => { });
-    //   }
-
-    // });
+    });
 
     // const newStatistic = await getUserStatistic(userId, userToken) || emptyStats();
     const newStatistic = currentStatistic;

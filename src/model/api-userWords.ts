@@ -1,4 +1,5 @@
 import { emptyWordStats } from './api-statistic';
+import { GAMES_EDU_PROGRESS } from './constants';
 
 import type { Word, UserWord, UserWordDifficulty } from './app-types';
 
@@ -34,28 +35,7 @@ export async function createUserWord (
   userId: string,
   token: string,
   newWord: UserWord,
-  // wordId: string,
-  // word: string,
-  // difficulty: UserWordDifficulty,
-  // gameLastAnswer?: boolean,
 ){
-  // const newWord: UserWord = {
-  //   difficulty,
-  //   optional:{
-
-  //     statistic: {
-  //       f: (!gameLastAnswer? 1: 0),
-  //       g: (gameLastAnswer? 1: 0),
-  //       s: (gameLastAnswer? 1: 0),
-  //       l: !!gameLastAnswer,
-  //     },
-
-  //     postDate: new Date().toISOString(),
-  //     theWord: word,
-  //     wordId,
-  //   },
-  // };
-
   let rawResponse;
   try{
     rawResponse = await fetch(`${API_ENDPOINT}/users/${userId}/words/${newWord.optional.wordId}`, {
@@ -106,18 +86,10 @@ export async function getUserWordById (userId:string, wordId:string, token:strin
 
 // Update a user's Word 
 
-// Schema = {
-//     "difficulty": "string",
-//     "optional": {
-//      }
-//   }
-
 export async function updateUserWord (
   userId: string,
   token: string,
   updUserWord: UserWord,
-  // gameLastAnswer?: boolean,
-  // statistic?: GameStatsProgressWord,
 ){
   let rawResponse;
   const updatedWord = updUserWord;
@@ -223,10 +195,12 @@ export async function setUserWordDifficulty (
   userId: string,
   userToken: string,
   wordId: string,
-  difficulty: UserWordDifficulty,
+  wordDifficulty: UserWordDifficulty,
   isEntryExist?: boolean,
   gameLastAnswer?: boolean,
 ) {
+  let difficulty = wordDifficulty;
+
   const isUserWordExisted =
     (isEntryExist !== undefined)
       ?  isEntryExist
@@ -245,6 +219,19 @@ export async function setUserWordDifficulty (
       statistic.streak = 0;
     }
   }
+
+  // manage game guess streak here  --------------------------
+
+  if (difficulty !== 'learned' && difficulty !== 'hard' && statistic.streak === GAMES_EDU_PROGRESS.guessWordToLearn ) {
+    difficulty = 'learned';
+    statistic.streak = 0;
+  }
+  if (difficulty === 'hard' && statistic.streak === GAMES_EDU_PROGRESS.guessHardWordToLearn ) {
+    difficulty = 'learned';
+    statistic.streak = 0;
+  }
+
+  // ----------------------------------------------------------
 
   const updUserWord: UserWord = {
     difficulty,
