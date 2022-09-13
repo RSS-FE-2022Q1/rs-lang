@@ -91,7 +91,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
           statistic: emptyWordStats(),
           wordId: renderedWordId,
           theWord: wordObj.word,
-          postDate: new Date().toISOString(),
+          postDate: new Date().toLocaleDateString('en-US'),
         },
       };
 
@@ -120,7 +120,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
           statistic: emptyWordStats(),
           wordId:renderedWordId,
           theWord: wordObj.word,
-          postDate: new Date().toISOString(),
+          postDate: new Date().toLocaleDateString('en-US'),
         },
       };
       dispatch(userWordsActions.addUserWord(newWord));

@@ -93,7 +93,7 @@ export async function updateUserWord (
 ){
   let rawResponse;
   const updatedWord = updUserWord;
-  updatedWord.optional.lastUpdatedDate = new Date().toISOString();
+  // updatedWord.optional.lastUpdatedDate = new Date().toISOString();
   try{
     rawResponse = fetch(`${API_ENDPOINT}/users/${userId}/words/${updatedWord.optional.wordId}`, {
       method: 'PUT',
@@ -238,6 +238,7 @@ export async function setUserWordDifficulty (
     optional: {
       wordId,
       statistic,
+      postDate: new Date().toLocaleDateString('en-US'),
     },
   };
 

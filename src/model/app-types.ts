@@ -33,17 +33,10 @@ export interface Word {
 export interface UserWord {
   difficulty: UserWordDifficulty;
   optional:{
-
     statistic: GameStatsProgressWord;
-
-    numberOfMistakesSprint?: number;
-    numberOfMistakesAudio?: number;
-    numberOfRightGuessSprint?: number;
-    numberOfRightGuessAudio?: number;
-    postDate?: string;
-    lastUpdatedDate?: string;
-    theWord?:string;
+    postDate: string;
     wordId:string;
+    theWord?:string;
   };
 };
 
