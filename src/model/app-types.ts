@@ -33,6 +33,9 @@ export interface Word {
 export interface UserWord {
   difficulty: UserWordDifficulty;
   optional:{
+
+    statistic: GameStatsProgressWord;
+
     numberOfMistakesSprint?: number;
     numberOfMistakesAudio?: number;
     numberOfRightGuessSprint?: number;
@@ -43,6 +46,12 @@ export interface UserWord {
     wordId:string;
   };
 };
+
+export interface UserWordStats {
+  numberOfMistakes?: number;
+  numberOfRightGuess?: number;
+  lastAnswerWasCorrect?: boolean;
+}
 
 export type LocationGenerics = MakeGenerics<{
   LoaderData: {
@@ -63,11 +72,12 @@ export interface ProgressWordMap {
 };
 
 export interface GameStatsProgressWord {
+  id?: string;
   word?: string;
-  g: number;
-  f: number;
-  s : number;
-  l: boolean;
+  guessed: number;
+  failed: number;
+  streak : number;
+  last: boolean;
 };
 
 export interface IUserStats {

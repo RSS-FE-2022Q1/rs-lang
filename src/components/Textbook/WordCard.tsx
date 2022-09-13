@@ -11,7 +11,7 @@ import * as apiUsersWords from '../../model/api-userWords';
 import { setUserWordDifficulty } from '../../model/api-userWords';
 import { PlayAudio } from '../PlayAudio/PlayAudio';
 
-import { addWordsToStatistic } from '@/model/api-statistic';
+import { addWordsToStatistic, emptyWordStats } from '@/model/api-statistic';
 import { API_ENDPOINT } from '@/model/api-words';
 import type { UserWord, Word } from '@/model/app-types';
 import { RootState } from '@/store/store';
@@ -49,11 +49,12 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
 
   const authState = useSelector((state:RootState) => state.authentication);
   const userWordsState = useSelector((state:RootState) => state.userWords);
-  const userStatsState = useSelector((state:RootState) => state.userStats);
 
   let wordProgress;
   if(renderedWordId){
-    wordProgress = userStatsState.userProgress[renderedWordId];
+    wordProgress = userWordsState.userWords.find(
+      el=>el.optional.wordId === renderedWordId)?.optional.statistic;
+
     // console.log('userProgress', userStatsState.userProgress);
     // console.log('wordProgress', wordProgress, renderedWordId);
   }
@@ -82,11 +83,12 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
       dispatch(userWordsActions.deleteUserWord({ deletedWordId:wordInUsersWords.optional.wordId }));
 
     } else if(renderedWordId){
-      await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, wordObj.word, 'hard').catch(() => {});
+      await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, 'hard').catch(() => {});
 
       const newWord:UserWord = {
         difficulty: 'hard',
         optional:{
+          statistic: emptyWordStats(),
           wordId: renderedWordId,
           theWord: wordObj.word,
           postDate: new Date().toISOString(),
@@ -109,12 +111,13 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
       dispatch(userWordsActions.deleteUserWord({ deletedWordId:wordInUsersWords.optional.wordId }));
 
     } else if(renderedWordId){
-      await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, wordObj.word, 'learned').catch(() => {});
+      await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, 'learned').catch(() => {});
       await addWordsToStatistic(authState.userId, authState.token, [{ id: wordObj.id, type:'learned' }]);
 
       const newWord:UserWord = {
         difficulty: 'learned',
         optional:{
+          statistic: emptyWordStats(),
           wordId:renderedWordId,
           theWord: wordObj.word,
           postDate: new Date().toISOString(),
@@ -141,7 +144,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
     return baseClass;
   };
 
-  const lastGuessBadgeClasses = `word-card-progress-badge ${wordProgress?.l ? 'text-green-400' : 'text-yellow-600'}`;
+  const lastGuessBadgeClasses = `word-card-progress-badge ${wordProgress?.last ? 'text-green-400' : 'text-yellow-600'}`;
 
   return (
     <article className="word-card">
@@ -181,13 +184,13 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
         {authState.isLoggedIn && wordProgress && (
           <div className="word-card-progress">
             <span className="word-card-progress-badge text-green-400" data-tip="Правильных ответов в играх">
-              {wordProgress?.g}
+              {wordProgress?.guessed}
             </span>
             <span className="word-card-progress-badge text-yellow-600" data-tip="Ошибок">
-              {wordProgress?.f}
+              {wordProgress?.failed}
             </span>
             <span className={lastGuessBadgeClasses} data-tip="Поледний ответ">
-              {wordProgress?.l ? '+' : '-'}
+              {wordProgress?.last ? '+' : '-'}
             </span>
           </div>
         )}

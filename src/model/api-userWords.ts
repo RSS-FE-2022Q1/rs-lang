@@ -1,3 +1,5 @@
+import { emptyWordStats } from './api-statistic';
+
 import type { Word, UserWord, UserWordDifficulty } from './app-types';
 
 const API_ENDPOINT = 'https://rss-rs-lang.herokuapp.com';
@@ -31,21 +33,32 @@ export async function getUserWords (userId:string, token:string){
 export async function createUserWord (
   userId: string,
   token: string,
-  wordId: string,
-  word: string,
-  difficulty: UserWordDifficulty,
+  newWord: UserWord,
+  // wordId: string,
+  // word: string,
+  // difficulty: UserWordDifficulty,
+  // gameLastAnswer?: boolean,
 ){
-  const newWord: UserWord = {
-    difficulty,
-    optional:{
-      postDate: new Date().toISOString(),
-      theWord: word,
-      wordId,
-    },
-  };
+  // const newWord: UserWord = {
+  //   difficulty,
+  //   optional:{
+
+  //     statistic: {
+  //       f: (!gameLastAnswer? 1: 0),
+  //       g: (gameLastAnswer? 1: 0),
+  //       s: (gameLastAnswer? 1: 0),
+  //       l: !!gameLastAnswer,
+  //     },
+
+  //     postDate: new Date().toISOString(),
+  //     theWord: word,
+  //     wordId,
+  //   },
+  // };
+
   let rawResponse;
   try{
-    rawResponse = await fetch(`${API_ENDPOINT}/users/${userId}/words/${wordId}`, {
+    rawResponse = await fetch(`${API_ENDPOINT}/users/${userId}/words/${newWord.optional.wordId}`, {
       method:'POST',
       headers:{
         'Authorization': `Bearer ${token}`,
@@ -99,7 +112,13 @@ export async function getUserWordById (userId:string, wordId:string, token:strin
 //      }
 //   }
 
-export async function updateUserWord (userId:string, token:string, updUserWord:UserWord){
+export async function updateUserWord (
+  userId: string,
+  token: string,
+  updUserWord: UserWord,
+  // gameLastAnswer?: boolean,
+  // statistic?: GameStatsProgressWord,
+){
   let rawResponse;
   const updatedWord = updUserWord;
   updatedWord.optional.lastUpdatedDate = new Date().toISOString();
@@ -204,24 +223,39 @@ export async function setUserWordDifficulty (
   userId: string,
   userToken: string,
   wordId: string,
-  word: string,
   difficulty: UserWordDifficulty,
   isEntryExist?: boolean,
+  gameLastAnswer?: boolean,
 ) {
   const isUserWordExisted =
     (isEntryExist !== undefined)
       ?  isEntryExist
       : (!!(await getUserWordById (userId, wordId, userToken)));
 
+  const userWord = isUserWordExisted? await getUserWordById (userId, wordId, userToken) : undefined;
+  const statistic =  userWord? userWord.optional.statistic : emptyWordStats();
+
+  if (gameLastAnswer !== undefined) {
+    statistic.last = gameLastAnswer;
+    if (gameLastAnswer){
+      statistic.guessed +=1;
+      statistic.streak +=1;
+    } else {
+      statistic.failed +=1;
+      statistic.streak = 0;
+    }
+  }
+
   const updUserWord: UserWord = {
     difficulty,
-    optional:{
+    optional: {
       wordId,
+      statistic,
     },
   };
 
   if (isUserWordExisted) await updateUserWord(userId, userToken, updUserWord);
-  else await createUserWord(userId, userToken, wordId, word, difficulty);
+  else await createUserWord(userId, userToken, updUserWord);
 }
 
 export async function getUserWordsCount (

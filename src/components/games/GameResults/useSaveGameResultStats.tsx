@@ -21,6 +21,9 @@ export async function useSaveGameResultStats (
   wrongAnswers: ISprintWord[],
 ) {
 
+  const correctAnswerIds = correctAnswers.map(el=>el.id);
+  const wrongAnswerIds = wrongAnswers.map(el=>el.id);
+
   const authState = useSelector((state: RootState) => state.authentication);
 
   if (authState.isLoggedIn) {
@@ -37,25 +40,30 @@ export async function useSaveGameResultStats (
     const learnedWords = allWords!.filter(el => el.difficulty === 'learned').map(el => el.optional.wordId);
     const hardWords = allWords!.filter(el => el.difficulty === 'hard').map(el => el.optional.wordId);
 
-    const setWordDifficulty = async (word: ISprintWord, difficulty: StatsWordDifficulty) => {
+    const setWordDifficulty = async (
+      word: ISprintWord,
+      difficulty: StatsWordDifficulty,
+      lastAnswer: boolean,
+    ) => {
       const isEntryExisted = !!(allWords?.find(el => el.optional.wordId === word.id));
-      await setUserWordDifficulty(userId, userToken, word.id, word.word, difficulty, isEntryExisted)
-        .catch(() => { });
+      await setUserWordDifficulty(
+        userId, userToken, word.id, difficulty, isEntryExisted, lastAnswer,
+      ).catch(() => { });
     };
 
     const removeWordFormLearned = async (word: ISprintWord) => {
-      await setWordDifficulty(word, 'new');
+      await setWordDifficulty(word, 'new', false);
     };
 
     const saveWordAsLearned = async (word: ISprintWord) => {
-      await setWordDifficulty(word, 'learned');
+      await setWordDifficulty(word, 'learned', true);
 
       addWordsToStats([{ id: word.id, type: 'learned' }], currentStatistic);
     };
 
     const saveWordsAsNew = (words: ISprintWord[]) => {
       words.forEach(el => {
-        setWordDifficulty(el, 'new').catch(() => { });
+        setWordDifficulty(el, 'new', correctAnswerIds.includes(el.id)).catch(() => { });
       });
 
       const newStats: WordStats[] = words.map(el => ({ id: el.id, type: 'new' }));
@@ -99,51 +107,52 @@ export async function useSaveGameResultStats (
 
     // Loop thru answers
 
-    correctAnswers.forEach(el => {
-      if (currentProgress[el.id]) {
-        currentProgress[el.id].g += 1;
-        const curStreak = currentProgress[el.id].s + 1;
-        setBestStreak(curStreak);
-        currentProgress[el.id].s = manageGuessStreak(el, curStreak);
-        currentProgress[el.id].l = true;
-      }
+    // correctAnswers.forEach(el => {
+    //   if (currentProgress[el.id]) {
+    //     currentProgress[el.id].g += 1;
+    //     const curStreak = currentProgress[el.id].s + 1;
+    //     setBestStreak(curStreak);
+    //     currentProgress[el.id].s = manageGuessStreak(el, curStreak);
+    //     currentProgress[el.id].l = true;
+    //   }
 
-      else {
-        setBestStreak(1);
+    //   else {
+    //     setBestStreak(1);
 
-        currentProgress[el.id] = {
-          g: 1,
-          f: 0,
-          s: 1,
-          l: true,
-        };
-      }
-    });
+    //     currentProgress[el.id] = {
+    //       g: 1,
+    //       f: 0,
+    //       s: 1,
+    //       l: true,
+    //     };
+    //   }
+    // });
 
-    wrongAnswers.forEach(el => {
-      if (currentProgress[el.id]) {
-        currentProgress[el.id].f += 1;
-        currentProgress[el.id].g = 0;
-        currentProgress[el.id].l = false;
-      }
-      else currentProgress[el.id] = {
-        g: 0,
-        f: 1,
-        s: 0,
-        word: el.word,
-        l: false,
-      };
+    // wrongAnswers.forEach(el => {
+    //   if (currentProgress[el.id]) {
+    //     currentProgress[el.id].f += 1;
+    //     currentProgress[el.id].g = 0;
+    //     currentProgress[el.id].l = false;
+    //   }
+    //   else currentProgress[el.id] = {
+    //     g: 0,
+    //     f: 1,
+    //     s: 0,
+    //     word: el.word,
+    //     l: false,
+    //   };
 
-      if (isWordinListLearned(el.id)) {
-        removeWordFormLearned(el)
-          .catch(() => { });
-      }
+    //   if (isWordinListLearned(el.id)) {
+    //     removeWordFormLearned(el)
+    //       .catch(() => { });
+    //   }
 
-    });
+    // });
 
     // const newStatistic = await getUserStatistic(userId, userToken) || emptyStats();
     const newStatistic = currentStatistic;
-    newStatistic.optional.gamesWordsProgress = currentProgress;
+
+    // newStatistic.optional.gamesWordsProgress = currentProgress;
 
     const gameCounter = newStatistic.optional.gamesStatistic.gamesTotalCount[game] || 0;
     newStatistic.optional.gamesStatistic.gamesTotalCount[game] = gameCounter + 1;

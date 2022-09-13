@@ -56,6 +56,13 @@ export const emptyStats = () => {
 
 };
 
+export const emptyWordStats = ()=> ({
+  failed: 0,
+  guessed: 0,
+  streak: 0,
+  last: false,
+});
+
 export async function saveEmptyStatistic (userId: string, userToken: string) {
   await updateUserStatistic(userId, userToken, emptyStats());
 }
@@ -91,6 +98,8 @@ export async function getUserStatistic (userId: string, token: string) {
   catch (e) {
     throw new Error();
   }
+  console.log(JSON.stringify(result));
+  console.log(JSON.stringify(result).length);
 
   return result;
 }
