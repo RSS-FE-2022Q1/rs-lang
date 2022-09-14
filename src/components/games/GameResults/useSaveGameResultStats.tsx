@@ -18,6 +18,7 @@ export async function useSaveGameResultStats (
   userToken: string,
   correctAnswers: ISprintWord[],
   wrongAnswers: ISprintWord[],
+  streak: number,
 ) {
 
   const correctAnswerIds = correctAnswers.map(el => el.id);
@@ -62,12 +63,6 @@ export async function useSaveGameResultStats (
     const isWordinListLearned = (wordId: string) => !!(learnedWords.find(el => el === wordId));
     const isWordinListHard = (wordId: string) => !!(hardWords?.find(el => el === wordId));
 
-    // Define beststreak
-    let bestStreak = 0;
-    const setBestStreak = (value: number) => {
-      if (value > bestStreak) bestStreak = value;
-    };
-
     // Save new words
     const encounteredWords = [...correctAnswers, ...wrongAnswers];
 
@@ -109,7 +104,7 @@ export async function useSaveGameResultStats (
     resultsTotal.success += correctAnswers.length;
 
     const currentBestStreak = newStatistic.optional.gamesStatistic.bestStreak || 0;
-    newStatistic.optional.gamesStatistic.bestStreak = (currentBestStreak < bestStreak) ? bestStreak : currentBestStreak;
+    newStatistic.optional.gamesStatistic.bestStreak = (currentBestStreak < streak) ? streak : currentBestStreak;
 
     if (!newStatistic.optional.gamesStatistic.gamesPerDay) {
       newStatistic.optional.gamesStatistic.gamesPerDay = {};

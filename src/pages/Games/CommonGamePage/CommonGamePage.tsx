@@ -142,6 +142,7 @@ export const CommonGamePage = ({ game }: GamePageProps): JSX.Element => {
           wrongAnswers={gameResults.wrongAnswers}
           score = {gameResults.score}
           gameName = {game}
+          streak = {gameResults.streak}
         />
         <div className="game_restart">
           <Button buttonType='primary' text='Играть снова' onClick={restartGame} />
