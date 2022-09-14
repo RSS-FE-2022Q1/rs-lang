@@ -170,6 +170,11 @@ export async function getUserAggregatedWords (userId:string, token:string, query
 };
 
 // GET user's aggregated WORD
+
+export type UserWordAgrResponce = {
+  userWord: UserWord;
+};
+
 export async function getUserAggregatedWordById (userId:string, wordId:string, token:string){
   const url = new URL (`${API_ENDPOINT}/users/${userId}/aggregatedWords/${wordId}`);
   let rawResponse;
@@ -186,8 +191,9 @@ export async function getUserAggregatedWordById (userId:string, wordId:string, t
         return res.json();
       }
       throw new Error(res.statusText);
-    }).then(((res:UserWord) => res));
+    }).then(((res:UserWordAgrResponce) => res.userWord));
   }catch(err){console.log(err);}
+
   return rawResponse;
 };
 

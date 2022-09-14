@@ -8,7 +8,7 @@ import ReactTooltip from 'react-tooltip';
 import React from 'react';
 
 import * as apiUsersWords from '../../model/api-userWords';
-import { setUserWordDifficulty } from '../../model/api-userWords';
+import { getUserAggregatedWordById, setUserWordDifficulty } from '../../model/api-userWords';
 import { PlayAudio } from '../PlayAudio/PlayAudio';
 
 import { addWordsToStatistic, emptyWordStats } from '@/model/api-statistic';
@@ -51,12 +51,17 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
   const userWordsState = useSelector((state:RootState) => state.userWords);
 
   let wordProgress;
+  let isProgressEmpty = false;
   if(renderedWordId){
     wordProgress = userWordsState.userWords.find(
       el=>el.optional.wordId === renderedWordId)?.optional.statistic;
 
-    // console.log('userProgress', userStatsState.userProgress);
-    // console.log('wordProgress', wordProgress, renderedWordId);
+    if (wordProgress){
+      if (wordProgress.failed === 0 && wordProgress.guessed === 0) {
+        isProgressEmpty = true;
+      }
+    }
+
   }
 
   const wordInUsersWords = userWordsState.userWords.
@@ -84,11 +89,15 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
 
     } else if(renderedWordId){
       await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, 'hard').catch(() => {});
+      const wordStats = await getUserAggregatedWordById(
+        authState.userId, renderedWordId, authState.token,
+      );
+      const statistic = wordStats?.optional.statistic || emptyWordStats();
 
       const newWord:UserWord = {
         difficulty: 'hard',
         optional:{
-          statistic: emptyWordStats(),
+          statistic,
           wordId: renderedWordId,
           theWord: wordObj.word,
           postDate: new Date().toLocaleDateString('en-US'),
@@ -114,10 +123,15 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
       await setUserWordDifficulty(authState.userId, authState.token, renderedWordId, 'learned').catch(() => {});
       await addWordsToStatistic(authState.userId, authState.token);
 
+      const wordStats = await getUserAggregatedWordById(
+        authState.userId, renderedWordId, authState.token,
+      );
+      const statistic = wordStats?.optional.statistic || emptyWordStats();
+
       const newWord:UserWord = {
         difficulty: 'learned',
         optional:{
-          statistic: emptyWordStats(),
+          statistic,
           wordId:renderedWordId,
           theWord: wordObj.word,
           postDate: new Date().toLocaleDateString('en-US'),
@@ -182,7 +196,7 @@ const WordCard = React.memo((props:IWordCard): JSX.Element => {
       </div>
 
       <div className='word-card-image-wrapper'>
-        {authState.isLoggedIn && wordProgress && (
+        {authState.isLoggedIn && wordProgress && !isProgressEmpty && (
           <div className="word-card-progress">
             <span className="word-card-progress-badge text-green-400" data-tip="Правильных ответов в играх">
               {wordProgress?.guessed}
