@@ -1,3 +1,6 @@
+import { emptyWordStats } from './api-statistic';
+import { GAMES_EDU_PROGRESS } from './constants';
+
 import type { Word, UserWord, UserWordDifficulty } from './app-types';
 
 const API_ENDPOINT = 'https://rss-rs-lang.herokuapp.com';
@@ -31,21 +34,11 @@ export async function getUserWords (userId:string, token:string){
 export async function createUserWord (
   userId: string,
   token: string,
-  wordId: string,
-  word: string,
-  difficulty: UserWordDifficulty,
+  newWord: UserWord,
 ){
-  const newWord: UserWord = {
-    difficulty,
-    optional:{
-      postDate: new Date().toISOString(),
-      theWord: word,
-      wordId,
-    },
-  };
   let rawResponse;
   try{
-    rawResponse = await fetch(`${API_ENDPOINT}/users/${userId}/words/${wordId}`, {
+    rawResponse = await fetch(`${API_ENDPOINT}/users/${userId}/words/${newWord.optional.wordId}`, {
       method:'POST',
       headers:{
         'Authorization': `Bearer ${token}`,
@@ -93,16 +86,14 @@ export async function getUserWordById (userId:string, wordId:string, token:strin
 
 // Update a user's Word 
 
-// Schema = {
-//     "difficulty": "string",
-//     "optional": {
-//      }
-//   }
-
-export async function updateUserWord (userId:string, token:string, updUserWord:UserWord){
+export async function updateUserWord (
+  userId: string,
+  token: string,
+  updUserWord: UserWord,
+){
   let rawResponse;
   const updatedWord = updUserWord;
-  updatedWord.optional.lastUpdatedDate = new Date().toISOString();
+  // updatedWord.optional.lastUpdatedDate = new Date().toISOString();
   try{
     rawResponse = fetch(`${API_ENDPOINT}/users/${userId}/words/${updatedWord.optional.wordId}`, {
       method: 'PUT',
@@ -179,6 +170,11 @@ export async function getUserAggregatedWords (userId:string, token:string, query
 };
 
 // GET user's aggregated WORD
+
+export type UserWordAgrResponce = {
+  userWord: UserWord;
+};
+
 export async function getUserAggregatedWordById (userId:string, wordId:string, token:string){
   const url = new URL (`${API_ENDPOINT}/users/${userId}/aggregatedWords/${wordId}`);
   let rawResponse;
@@ -195,8 +191,9 @@ export async function getUserAggregatedWordById (userId:string, wordId:string, t
         return res.json();
       }
       throw new Error(res.statusText);
-    }).then(((res:UserWord) => res));
+    }).then(((res:UserWordAgrResponce) => res.userWord));
   }catch(err){console.log(err);}
+
   return rawResponse;
 };
 
@@ -204,33 +201,70 @@ export async function setUserWordDifficulty (
   userId: string,
   userToken: string,
   wordId: string,
-  word: string,
-  difficulty: UserWordDifficulty,
+  wordDifficulty: UserWordDifficulty,
   isEntryExist?: boolean,
+  gameLastAnswer?: boolean,
 ) {
+  let difficulty = wordDifficulty;
+
   const isUserWordExisted =
     (isEntryExist !== undefined)
       ?  isEntryExist
       : (!!(await getUserWordById (userId, wordId, userToken)));
 
+  const userWord = isUserWordExisted? await getUserWordById (userId, wordId, userToken) : undefined;
+  const statistic =  userWord? userWord.optional.statistic : emptyWordStats();
+
+  if (gameLastAnswer !== undefined) {
+    statistic.last = gameLastAnswer;
+    if (gameLastAnswer){
+      statistic.guessed +=1;
+      statistic.streak +=1;
+    } else {
+      statistic.failed +=1;
+      statistic.streak = 0;
+    }
+  }
+
+  // manage game guess streak here  --------------------------
+
+  if (difficulty !== 'learned' && difficulty !== 'hard' && statistic.streak === GAMES_EDU_PROGRESS.guessWordToLearn ) {
+    difficulty = 'learned';
+    statistic.streak = 0;
+  }
+  if (difficulty === 'hard' && statistic.streak === GAMES_EDU_PROGRESS.guessHardWordToLearn ) {
+    difficulty = 'learned';
+    statistic.streak = 0;
+  }
+
+  // ----------------------------------------------------------
+
+  const postDate = (userWord && userWord.difficulty === difficulty)
+    ? userWord.optional.postDate
+    :  new Date().toLocaleDateString('en-US');;
+
   const updUserWord: UserWord = {
     difficulty,
-    optional:{
+    optional: {
       wordId,
+      statistic,
+      postDate,
     },
   };
 
   if (isUserWordExisted) await updateUserWord(userId, userToken, updUserWord);
-  else await createUserWord(userId, userToken, wordId, word, difficulty);
+  else await createUserWord(userId, userToken, updUserWord);
 }
 
 export async function getUserWordsCount (
   userId: string,
   token: string,
   wordType: UserWordDifficulty,
+  forDay?: string,
 ){
   const url = new URL (`${API_ENDPOINT}/users/${userId}/aggregatedWords`);
-  const filter = `filter={"$and":[{"userWord.difficulty":"${wordType}"}]}`;
+  const filterbyDate = forDay? `, "userWord.optional.postDate": "${forDay}"` : '';
+  const filter = `filter={"$and":[{"userWord.difficulty":"${wordType}" ${filterbyDate}}]}`;
   const queryParams = new URLSearchParams(filter);
   url.search = queryParams.toString(); // url + ? + params
   let rawResponse;

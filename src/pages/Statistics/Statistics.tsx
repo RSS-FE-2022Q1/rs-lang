@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 import './Statistics.pcss';
 
 import { useSelector } from 'react-redux';
@@ -9,7 +10,7 @@ import { TableCard } from './TableCard/TableCard';
 
 import { emptyStats, getUserStatistic } from '@/model/api-statistic';
 import { getUserWordsCount } from '@/model/api-userWords';
-import { GameResStatsItem, GamesPerDayMap, GameStatsTotal, IUserStatistic, ResultsPerDayMap, StatsWordDifficulty, WordsPerDayMap } from '@/model/app-types';
+import { GameResStatsItem, GamesPerDayMap, GameStatsTotal, IUserStatistic, ResultsPerDayMap } from '@/model/app-types';
 import { GameType } from '@/model/games-types';
 import { RootState } from '@/store/store';
 
@@ -51,6 +52,9 @@ const Statistics = (): JSX.Element => {
   const [learnedCount, setLC] = useState<number>(0);
   const [hardCount, setHC] = useState<number>(0);
 
+  const [learnedTodayCount, setLTC] = useState<number>(0);
+  const [newTodayCount, setNTC] = useState<number>(0);
+
   const [stats, setStats] = useState<IUserStatistic>();
 
   const [graphWordsLabels, setgraphWordsLabels] = useState<string[]>([]);
@@ -72,26 +76,34 @@ const Statistics = (): JSX.Element => {
       const hc = await getUserWordsCount(authState.userId, authState.token, 'hard');
       if (hc) setHC(hc);
 
+      const ltc = await getUserWordsCount(authState.userId, authState.token, 'learned', currDate);
+      if (ltc) setLTC(ltc);
+      const ntc = await getUserWordsCount(authState.userId, authState.token, 'new', currDate);
+      if (ntc) setNTC(ntc);
+
       const currentStatistic =
         await getUserStatistic(authState.userId, authState.token) || emptyStats();
 
       if (currentStatistic) setStats(currentStatistic);
 
-      if (currentStatistic?.optional.wordsPerDay) {
-        const labels: string[] = [];
-        const learned: number[] = [];
-        const newWords: number[] = [];
-        Object.entries(currentStatistic?.optional.wordsPerDay)
-          .forEach(([key, value]) => {
-            labels.push(key);
-            learned.push(value.learned.length);
-            newWords.push(value.new.length);
-          });
-        setgraphWordsLabels(labels);
-        setgraphWordsValues(learned);
-        setgraphNewWordsValues(newWords);
-        setgraphDataReady(true);
+      const learningDays = currentStatistic?.optional.learningDays.days;
+      const learned: number[] = [];
+      const newWords: number[] = [];
+
+      for await (const day of learningDays) {
+        const lwc = await getUserWordsCount(authState.userId, authState.token, 'learned', day);
+        if (lwc !== undefined)
+          learned.push(lwc);
+
+        const nwc = await getUserWordsCount(authState.userId, authState.token, 'new', day);
+        if (nwc !== undefined)
+          newWords.push(nwc);
       }
+
+      setgraphWordsLabels(learningDays);
+      setgraphWordsValues(learned);
+      setgraphNewWordsValues(newWords);
+      setgraphDataReady(true);
 
       if (currentStatistic?.optional.gamesStatistic.resultsPerDay) {
         const labels: string[] = [];
@@ -109,12 +121,6 @@ const Statistics = (): JSX.Element => {
 
     loadData().catch(() => { });
   }, [authState.userId, authState.token, currDate]);
-
-  const getWordsCount = (
-    entry: WordsPerDayMap | undefined,
-    type: StatsWordDifficulty,
-  ) => (entry && Object.keys(entry).includes(currDate))
-    ? entry[currDate][type].length : 0;
 
   const getData = (
     entry: GamesPerDayMap | undefined,
@@ -150,11 +156,11 @@ const Statistics = (): JSX.Element => {
           items={[
             {
               title: 'Встречено новых слов',
-              content: `${getWordsCount(stats?.optional.wordsPerDay, 'new') || '-'}`,
+              content: `${newTodayCount || '-'}`,
             },
             {
               title: 'Изучено слов',
-              content: `${getWordsCount(stats?.optional.wordsPerDay, 'learned') || '-'}`,
+              content: `${learnedTodayCount || '-'}`,
             },
           ]}
         />
