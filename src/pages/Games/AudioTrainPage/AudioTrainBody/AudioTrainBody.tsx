@@ -39,6 +39,8 @@ export const AudioTrainBody = (
   const [playTaskAudio, setPlayTaskAudio] = useState<PlaySoundItem>();
   const [gameSound, setGameSound] = useState(true);
 
+  const [longStreak, setLongStreak] = useState<Array<number>>([0]);
+
   const usedWords = useRef<ISprintWord[]>([]);
   const usedPages = useRef<number[]>([]);
   const wordList = useRef<ISprintWord[]>([]);
@@ -57,6 +59,7 @@ export const AudioTrainBody = (
       wrongAnswers: wrongAnswers.current,
       score: `${score}/${taskTotal}`,
       gameName,
+      streak: Math.max(...longStreak),
     };
 
     onGameOver(gameResults);
@@ -117,6 +120,17 @@ export const AudioTrainBody = (
 
   };
 
+  const handleStreak = (isCorrect: boolean) => {
+
+    if (isCorrect) {
+      longStreak[longStreak.length-1] += 1;
+    } else {
+      longStreak.push(0);
+    }
+
+    setLongStreak(longStreak);
+  };
+
   const handleAnswer = (answer: string) => {
 
     if (task && !showCorrectAnswer) {
@@ -137,6 +151,8 @@ export const AudioTrainBody = (
       setAnimateAntiScore(!isAnswerCorect);
 
       setshowCorrectAnswer(true);
+
+      handleStreak(isAnswerCorect);
     }
 
   };
@@ -164,7 +180,6 @@ export const AudioTrainBody = (
 
       const initData = (data: Word[]) => {
         wordList.current = [...data];
-        currentWords.current = [...data];
         setTaskTotal(data.length);
         setFirstRun(false);
         resetAnswerButtons();
@@ -172,6 +187,10 @@ export const AudioTrainBody = (
       };
 
       if (startedFromBook) {
+        loadWords(level, page)
+          .then((data: Word[]) => {
+            currentWords.current = [...data];
+          }).catch(() => { });
 
         loadWordsWithoutLearned(level, page, authState.userId, authState.token)
           .then((data: Word[]) => {
@@ -182,6 +201,7 @@ export const AudioTrainBody = (
 
         loadWords(level, page)
           .then((data: Word[]) => {
+            currentWords.current = [...data];
             initData(data);
           }).catch(() => { });
       }

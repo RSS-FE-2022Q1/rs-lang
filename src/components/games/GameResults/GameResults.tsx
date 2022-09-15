@@ -10,7 +10,7 @@ import { IGameResults } from '@/model/games-types';
 import { RootState } from '@/store/store';
 
 export const GameResults =
-  ({ correctAnswers, wrongAnswers, score, gameName }: IGameResults): JSX.Element => {
+  ({ correctAnswers, wrongAnswers, score, gameName, streak }: IGameResults): JSX.Element => {
 
     const getResultDesision = () => {
       if (correctAnswers.length === 0) return '';
@@ -29,6 +29,7 @@ export const GameResults =
       authState.token,
       correctAnswers,
       wrongAnswers,
+      streak,
     ).catch(()=>{});
 
     return (

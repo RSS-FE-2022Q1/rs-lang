@@ -49,47 +49,47 @@ const TextbookGroup = (): JSX.Element => {
 
   useEffect(() => {
 
-    if(params.page === '0'){
+    // if(params.page === '0'){
 
-      const wordsIdsByPages = async () => {
-        let pagesLearningStatus;
-        const idOfAllWordsOfThisGroup = await  apiWords.getIdOfAllWordsOfTheGroup(params.group)
-          .catch(() => {});
+    const wordsIdsByPages = async () => {
+      let pagesLearningStatus;
+      const idOfAllWordsOfThisGroup = await  apiWords.getIdOfAllWordsOfTheGroup(params.group)
+        .catch(() => {});
         //  console.log('idOfAllWordsOfThisGroup', idOfAllWordsOfThisGroup);
 
-        if(idOfAllWordsOfThisGroup){
-          pagesLearningStatus =   idOfAllWordsOfThisGroup.map(pageWordsIds => {
-            if(pageWordsIds){
-              const wordsFromThisPageInUsersWords =
+      if(idOfAllWordsOfThisGroup){
+        pagesLearningStatus =   idOfAllWordsOfThisGroup.map(pageWordsIds => {
+          if(pageWordsIds){
+            const wordsFromThisPageInUsersWords =
                pageWordsIds.filter(id => userWordsState.userWords
                  .find(w => w.optional.wordId === id && w.difficulty !== 'new'));
-              return wordsFromThisPageInUsersWords;
+            return wordsFromThisPageInUsersWords;
+          }
+          return pageWordsIds;
+        });
+
+        if(pagesLearningStatus){
+          pagesLearningStatus = pagesLearningStatus.map(pageWordsIds => {
+            if(pageWordsIds){
+              return pageWordsIds.length;
             }
             return pageWordsIds;
           });
-
-          if(pagesLearningStatus){
-            pagesLearningStatus = pagesLearningStatus.map(pageWordsIds => {
-              if(pageWordsIds){
-                return pageWordsIds.length;
-              }
-              return pageWordsIds;
-            });
-          }
         }
-        pagesLearningStatus = pagesLearningStatus?.map(p => p===20);
-        // console.log('pagesLearningStatus', pagesLearningStatus);
-        if(pagesLearningStatus){
-          dispatch( userStatsActions.initializeGroupLearningStatus(
-            { group:params.group, pagesLearningStatus }),
-          );
-          // console.log('userLearnedVolume', userStatsState.userLearnedPages);
-        }
-        return pagesLearningStatus;
-      };
+      }
+      pagesLearningStatus = pagesLearningStatus?.map(p => p===20);
+      // console.log('pagesLearningStatus', pagesLearningStatus);
+      if(pagesLearningStatus){
+        dispatch( userStatsActions.initializeGroupLearningStatus(
+          { group:params.group, pagesLearningStatus }),
+        );
+        // console.log('userLearnedVolume', userStatsState.userLearnedPages);
+      }
+      return pagesLearningStatus;
+    };
 
-      wordsIdsByPages().catch(() => {});
-    }
+    wordsIdsByPages().catch(() => {});
+    // }
 
   }, [params.page, params.group]);
 

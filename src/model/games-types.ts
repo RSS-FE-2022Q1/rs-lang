@@ -3,6 +3,7 @@ export interface IGameResults {
   wrongAnswers: ISprintWord[];
   score: string;
   gameName: GameType;
+  streak: number;
 }
 
 export interface ISprintWord {

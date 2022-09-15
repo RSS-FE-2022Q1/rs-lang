@@ -34,6 +34,7 @@ export const SprintBody = (
   const [firstRun, setFirstRun] = useState(true);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [longStreak, setLongStreak] = useState<Array<number>>([0]);
   const [multiplier, setmultiplier] = useState(1);
   const [task, setTask] = useState<ISprintWord>();
   const [smileFace, setSmileFace] = useState('🙂');
@@ -60,6 +61,7 @@ export const SprintBody = (
       wrongAnswers: wrongAnswers.current,
       score: `${score} баллов`,
       gameName,
+      streak: Math.max(...longStreak),
     };
 
     onGameOver(gameResults);
@@ -74,7 +76,7 @@ export const SprintBody = (
       wordList.current.splice(index, 1);
       usedWords.current.push(assigment);
 
-      if (Math.random() < 0.5) {
+      if (Math.random() < 0.5 ) {
         const randomIndex = getRandomIndex(currentWords.current.length, [index]);
 
         assigment.translateProposal = [(currentWords.current[randomIndex].wordTranslate)];
@@ -104,12 +106,15 @@ export const SprintBody = (
 
       const initData = (data: Word[]) => {
         wordList.current = [...data];
-        currentWords.current = [...data];
         setFirstRun(false);
         getAssignment();
       };
 
       if (startedFromBook) {
+        loadWords(level, page)
+          .then((data: Word[])=>{
+            currentWords.current = [...data];
+          }).catch(()=>{});
 
         loadWordsWithoutLearned(level, page, authState.userId, authState.token)
           .then((data: Word[])=>{
@@ -120,6 +125,7 @@ export const SprintBody = (
 
         loadWords(level, page)
           .then((data: Word[])=>{
+            currentWords.current = [...data];
             initData(data);
           }).catch(()=>{});
       }
@@ -141,7 +147,11 @@ export const SprintBody = (
   };
 
   const handleStreak = (isCorrect: boolean) => {
+    const ls = [...longStreak];
+
     if (isCorrect) {
+      ls[ls.length-1] += 1;
+
       if (streak === 2) {
         setmultiplier(prev => prev < MAX_MULTIPLIER ? prev * 2 : prev);
         if (multiplier < MAX_MULTIPLIER) setAnimateMultiplier(true);
@@ -150,9 +160,13 @@ export const SprintBody = (
       else setStreak(prev => prev + 1);
 
     } else {
+      ls.push(0);
+
       setStreak(0);
       setmultiplier(prev => prev > 1 ? prev / 2 : prev);
     }
+
+    setLongStreak(ls);
   };
 
   const handleAnswer = (answer: AnswerType) => {

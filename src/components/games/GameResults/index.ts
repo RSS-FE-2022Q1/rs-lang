@@ -1,38 +1,16 @@
-/* eslint-disable no-param-reassign */
-import { DaylyWordStats, IUserStatistic, WordStats } from '@/model/app-types';
+import { IUserStatistic } from '@/model/app-types';
 
-export function addWordsToStats (words: WordStats[], currentStats: IUserStatistic) {
-
-  const update: DaylyWordStats = {
-
-    'learned': [...new Set(words.filter(el => el.type === 'learned').map(el => el.id))],
-    'new': [...new Set(words.filter(el => el.type === 'new').map(el => el.id))],
-  };
-
+export function addWordsProgressStats (currentStats: IUserStatistic) {
   const currentDate = new Date().toLocaleDateString('en-US');
 
   if (currentStats) {
 
-    let currentDateStats = currentStats.optional.wordsPerDay[currentDate];
+    const currentDateStats = currentStats.optional.learningDays.days || [];
 
-    if (currentDateStats) {
+    const update = new Set([...currentDateStats, currentDate]);
 
-      Object.keys(currentDateStats).forEach(key => {
-        const entry = currentDateStats[key] as Array<string>;
-        const updateEntry = update[key] as Array<string>;
-
-        const upd = new Set([...entry, ...updateEntry]);
-        currentDateStats[key] = [...upd];
-      });
-
-    } else {
-      currentStats.optional.wordsPerDay[currentDate] = { learned: [], new: [] };
-      currentStats.optional.wordsPerDay[currentDate].learned = update.learned;
-      currentStats.optional.wordsPerDay[currentDate].new = update.new;
-
-      currentDateStats = update;
-    }
-
+    // eslint-disable-next-line no-param-reassign
+    currentStats.optional.learningDays.days = [...update];
   }
 
 }

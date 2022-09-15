@@ -33,16 +33,18 @@ export interface Word {
 export interface UserWord {
   difficulty: UserWordDifficulty;
   optional:{
-    numberOfMistakesSprint?: number;
-    numberOfMistakesAudio?: number;
-    numberOfRightGuessSprint?: number;
-    numberOfRightGuessAudio?: number;
-    postDate?: string;
-    lastUpdatedDate?: string;
-    theWord?:string;
+    statistic: GameStatsProgressWord;
+    postDate: string;
     wordId:string;
+    theWord?:string;
   };
 };
+
+export interface UserWordStats {
+  numberOfMistakes?: number;
+  numberOfRightGuess?: number;
+  lastAnswerWasCorrect?: boolean;
+}
 
 export type LocationGenerics = MakeGenerics<{
   LoaderData: {
@@ -63,16 +65,18 @@ export interface ProgressWordMap {
 };
 
 export interface GameStatsProgressWord {
+  id?: string;
   word?: string;
-  g: number;
-  f: number;
-  s : number;
-  l: boolean;
+  guessed: number;
+  failed: number;
+  streak : number;
+  last: boolean;
 };
 
 export interface IUserStats {
-  gamesWordsProgress: ProgressWordMap;
-  wordsPerDay: WordsPerDayMap;
+  // gamesWordsProgress: ProgressWordMap;
+  wordsPerDay?: WordsPerDayMap;
+  learningDays: {days: Array<string>};
   gamesStatistic: GameStatisticMap;
 };
 
