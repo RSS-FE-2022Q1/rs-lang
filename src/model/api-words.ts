@@ -1,6 +1,6 @@
-import type { Word } from './app-types';
+import { API_ENDPOINT } from './constants';
 
-export const API_ENDPOINT = 'https://rss-rs-lang.herokuapp.com';
+import type { Word } from './app-types';
 
 export function getWord (id:string){
   const url = new URL(`${API_ENDPOINT}/words/${id}`);

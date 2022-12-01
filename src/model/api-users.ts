@@ -1,6 +1,6 @@
-import type { User } from './app-types';
+import { API_ENDPOINT } from './constants';
 
-const API_ENDPOINT = 'https://rss-rs-lang.herokuapp.com';
+import type { User } from './app-types';
 
 // create User
 export function registerUser (user: User) {

@@ -1,5 +1,5 @@
-export const API_ENDPOINT = 'https://rss-rs-lang.herokuapp.com';
-export const FILESTORAGE_URL = 'https://rss-rs-lang.herokuapp.com/';
+export const API_ENDPOINT = 'https://rs-lang-qsu5.onrender.com';
+export const FILESTORAGE_URL = 'https://rs-lang-qsu5.onrender.com/';
 export const PAGES_PER_GROUP = 30;
 export const WORDS_PER_PAGE = 20;
 export const DEFAULT_GROUP_COUNT = 6;

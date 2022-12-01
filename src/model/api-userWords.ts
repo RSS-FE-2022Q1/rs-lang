@@ -1,9 +1,7 @@
 import { emptyWordStats } from './api-statistic';
-import { GAMES_EDU_PROGRESS } from './constants';
+import { API_ENDPOINT, GAMES_EDU_PROGRESS } from './constants';
 
 import type { Word, UserWord, UserWordDifficulty } from './app-types';
-
-const API_ENDPOINT = 'https://rss-rs-lang.herokuapp.com';
 
 // Get All user's Words
 export async function getUserWords (userId:string, token:string){

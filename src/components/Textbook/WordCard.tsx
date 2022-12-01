@@ -12,8 +12,8 @@ import { getUserAggregatedWordById, setUserWordDifficulty } from '../../model/ap
 import { PlayAudio } from '../PlayAudio/PlayAudio';
 
 import { addWordsToStatistic, emptyWordStats } from '@/model/api-statistic';
-import { API_ENDPOINT } from '@/model/api-words';
 import type { UserWord, Word } from '@/model/app-types';
+import { API_ENDPOINT } from '@/model/constants';
 import { RootState } from '@/store/store';
 import { userWordsActions } from '@/store/userWordSlice';
 
